@@ -1,0 +1,6 @@
+#Metadata: Metadata: Fileset: nodes
+#Thu May 02 16:06:19 COT 2019
+tdb.object.encoding=sse
+tdb.file.type=object
+tdb.file.impl.version=dat-v1
+tdb.file.impl=dat
