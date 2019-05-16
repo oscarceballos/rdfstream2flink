@@ -2,6 +2,7 @@
 .DS_Store
 **.DS_Store
 node_modules
-target
-out/*
+target/*
+src/main/java/rdfsrtream2flink/out/*
 *.log
+src/main/resources/cqelshome/*

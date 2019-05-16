@@ -1,5 +1,5 @@
 #Metadata: Metadata: Location: src/main/resources/cqelshome/datasets
-#Thu May 02 16:06:19 COT 2019
+#Sat May 11 15:59:45 COT 2019
 tdb.type=standalone
 tdb.record.triple=24
 tdb.record.quad=32
@@ -19,5 +19,5 @@ tdb.indexes.triples.primary=SPO
 tdb.indexes.triples=SPO,POS,OSP
 tdb.indexes.quads.primary=GSPO
 tdb.indexes.quads=GSPO,GPOS,GOSP,POSG,OSPG,SPOG
-tdb.created=2019-05-02T16\:06\:19.408-05\:00
+tdb.created=2019-05-11T15\:59\:45.580-05\:00
 tdb.create.version=0.8.10
