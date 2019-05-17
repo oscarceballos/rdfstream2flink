@@ -1,8 +1,0 @@
-#Metadata: Metadata: Fileset: prefix2id
-#Fri May 17 10:41:31 COT 2019
-tdb.file.type=rangeindex
-tdb.file.impl.version=bplustree-v1
-tdb.file.impl=bplustree
-tdb.bplustree.record=16,8
-tdb.bplustree.order=146
-tdb.bplustree.blksize=8192
