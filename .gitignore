@@ -1,8 +1,8 @@
 .idea
-.DS_Store
+**/.DS_Store
 **.DS_Store
-node_modules
-target/*
-src/main/java/rdfsrtream2flink/out/*
+**/target/
+**/out/
 *.log
-src/main/resources/cqelshome/*
+**/cache/
+**/dataset/
