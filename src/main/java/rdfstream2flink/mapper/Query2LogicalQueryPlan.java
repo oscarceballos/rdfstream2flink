@@ -1,9 +1,10 @@
 package rdfstream2flink.mapper;
 
-
 import com.hp.hpl.jena.sparql.algebra.Op;
-import org.deri.cqels.engine.ContinuousSelect;
-import org.deri.cqels.engine.ExecContext;
+import rdfstream2flink.cqels.engine.ContinuousSelect;
+import rdfstream2flink.cqels.engine.ExecContext;
+import rdfstream2flink.cqels.engine.OpRouter;
+import rdfstream2flink.cqels.engine.ProjectRouter;
 
 public class Query2LogicalQueryPlan {
 
@@ -13,11 +14,13 @@ public class Query2LogicalQueryPlan {
         this.queryString = queryString;
     }
 
-    public Op translationSQ2LQP() {
+    public OpRouter translationSQ2LQP() {
 
+        //Set<Thread> threads = Thread.getAllStackTraces().keySet();
+        //threads.forEach(k -> {});
         ExecContext context = new ExecContext("src/main/resources/cqelshome", true);
         ContinuousSelect cs = context.registerSelect(this.queryString);
-        Op op = cs.getOp();
+        OpRouter op = cs.sub();
 
         return op;
     }
