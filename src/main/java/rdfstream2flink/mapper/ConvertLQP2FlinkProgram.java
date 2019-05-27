@@ -6,9 +6,12 @@ import com.hp.hpl.jena.sparql.algebra.OpVisitorBase;
 import com.hp.hpl.jena.sparql.algebra.op.*;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.sparql.core.Var;
-import org.deri.cqels.engine.RangeWindow;
+/*import org.deri.cqels.engine.RangeWindow;
 import org.deri.cqels.engine.TripleWindow;
-import org.deri.cqels.lang.cqels.OpStream;
+import org.deri.cqels.lang.cqels.OpStream;*/
+import rdfstream2flink.cqels.engine.RangeWindow;
+import rdfstream2flink.cqels.engine.TripleWindow;
+import rdfstream2flink.cqels.lang.cqels.OpStream;
 import rdfstream2flink.mapper.JoinKeys;
 import rdfstream2flink.mapper.SolutionMapping;
 

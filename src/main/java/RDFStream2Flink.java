@@ -1,11 +1,11 @@
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Set;
 
 import com.hp.hpl.jena.sparql.algebra.Op;
-import rdfstream2flink.mapper.CreateFlinkProgram;
+import rdfstream2flink.cqels.engine.OpRouter;
 import rdfstream2flink.mapper.LoadQueryFile;
-import rdfstream2flink.mapper.LogicalQueryPlan2FlinkProgram;
 import rdfstream2flink.mapper.Query2LogicalQueryPlan;
 
 
@@ -28,7 +28,7 @@ public class RDFStream2Flink {
         System.out.print(queryString);
 
         Query2LogicalQueryPlan query2LQP = new Query2LogicalQueryPlan(queryString);
-        Op logicalQueryPlan = query2LQP.translationSQ2LQP();
+        OpRouter logicalQueryPlan = query2LQP.translationSQ2LQP();
 
         System.out.print(logicalQueryPlan);
 
