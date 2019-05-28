@@ -9,11 +9,9 @@ import com.hp.hpl.jena.sparql.core.Var;
 /*import org.deri.cqels.engine.RangeWindow;
 import org.deri.cqels.engine.TripleWindow;
 import org.deri.cqels.lang.cqels.OpStream;*/
-import rdfstream2flink.cqels.engine.RangeWindow;
-import rdfstream2flink.cqels.engine.TripleWindow;
-import rdfstream2flink.cqels.lang.cqels.OpStream;
-import rdfstream2flink.mapper.JoinKeys;
-import rdfstream2flink.mapper.SolutionMapping;
+import cqels.engine.RangeWindow;
+import cqels.engine.TripleWindow;
+import cqels.lang.cqels.OpStream;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
