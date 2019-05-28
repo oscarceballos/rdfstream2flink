@@ -1,10 +1,8 @@
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Set;
 
-import com.hp.hpl.jena.sparql.algebra.Op;
-import rdfstream2flink.cqels.engine.OpRouter;
+import cqels.engine.OpRouter;
 import rdfstream2flink.mapper.LoadQueryFile;
 import rdfstream2flink.mapper.Query2LogicalQueryPlan;
 

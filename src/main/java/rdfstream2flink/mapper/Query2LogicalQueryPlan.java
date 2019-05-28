@@ -1,10 +1,8 @@
 package rdfstream2flink.mapper;
 
-import com.hp.hpl.jena.sparql.algebra.Op;
-import rdfstream2flink.cqels.engine.ContinuousSelect;
-import rdfstream2flink.cqels.engine.ExecContext;
-import rdfstream2flink.cqels.engine.OpRouter;
-import rdfstream2flink.cqels.engine.ProjectRouter;
+import cqels.engine.ContinuousSelect;
+import cqels.engine.ExecContext;
+import cqels.engine.OpRouter;
 
 public class Query2LogicalQueryPlan {
 
