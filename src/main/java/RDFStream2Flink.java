@@ -2,8 +2,9 @@
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import cqels.engine.OpRouter;
+import org.deri.cqels.engine.OpRouter;
 import rdfstream2flink.mapper.LoadQueryFile;
+import rdfstream2flink.mapper.LogicalQueryPlan2FlinkProgram;
 import rdfstream2flink.mapper.Query2LogicalQueryPlan;
 
 
@@ -28,12 +29,12 @@ public class RDFStream2Flink {
         Query2LogicalQueryPlan query2LQP = new Query2LogicalQueryPlan(queryString);
         OpRouter logicalQueryPlan = query2LQP.translationSQ2LQP();
 
-        System.out.print(logicalQueryPlan);
+        // System.out.print(logicalQueryPlan);
 
-        /*LogicalQueryPlan2FlinkProgram lQP2FlinkProgram = new LogicalQueryPlan2FlinkProgram(logicalQueryPlan, path);
+        LogicalQueryPlan2FlinkProgram lQP2FlinkProgram = new LogicalQueryPlan2FlinkProgram(logicalQueryPlan, path);
         String flinkProgram = lQP2FlinkProgram.logicalQueryPlan2FlinkProgram();
 
-        System.out.print(flinkProgram);
+        // System.out.print(flinkProgram);
 
         /*CreateFlinkProgram javaFlinkProgram = new CreateFlinkProgram(flinkProgram, path);
         javaFlinkProgram.createFlinkProgram();*/

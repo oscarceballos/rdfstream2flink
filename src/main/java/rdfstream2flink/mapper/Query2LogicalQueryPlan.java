@@ -1,8 +1,8 @@
 package rdfstream2flink.mapper;
 
-import cqels.engine.ContinuousSelect;
-import cqels.engine.ExecContext;
-import cqels.engine.OpRouter;
+import org.deri.cqels.engine.ContinuousSelect;
+import org.deri.cqels.engine.ExecContext;
+import org.deri.cqels.engine.OpRouter;
 
 public class Query2LogicalQueryPlan {
 
