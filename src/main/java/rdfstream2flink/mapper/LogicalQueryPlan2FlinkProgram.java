@@ -1,16 +1,15 @@
 package rdfstream2flink.mapper;
 
-import com.hp.hpl.jena.sparql.algebra.Op;
-import rdfstream2flink.mapper.SolutionMapping;
+import org.deri.cqels.engine.OpRouter;
 
 import java.nio.file.Path;
 
 public class LogicalQueryPlan2FlinkProgram {
 
-    private Op logicalQueryPlan;
+    private OpRouter logicalQueryPlan;
     private String className;
 
-    public LogicalQueryPlan2FlinkProgram(Op logicalQueryPlan, Path path){
+    public LogicalQueryPlan2FlinkProgram(OpRouter logicalQueryPlan, Path path){
         this.logicalQueryPlan = logicalQueryPlan;
         this.className = path.getFileName().toString();
         this.className = this.className.substring(0, this.className.indexOf('.'));
