@@ -70,7 +70,7 @@ public class ConvertTriplePatternGroup {
             } else {
                     if(listTriplePatterns.size()==1) {
                         Triple triple = listTriplePatterns.get(0);
-                        bgp = "\t\tDataStream<SolutionMapping> sm" + indiceSM + " = rdfStream\n" +
+                        bgp = "\t\tDataStream<SolutionMapping> sm" + SolutionMapping.getIndice() + " = rdfStream"+IndexingDataStream.getIndice()+"\n" +
                                 "\t\t\t.keyBy(new MyKeySelector())\n" +
                                 "\t\t\t.countWindow("+triplesNumber+")\n" +
                                 "\t\t\t.process(new Triple2SolutionMapping2(" +

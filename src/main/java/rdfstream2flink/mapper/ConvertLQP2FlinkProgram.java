@@ -4,7 +4,6 @@ import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.sparql.algebra.Op;
 import com.hp.hpl.jena.sparql.algebra.OpVisitorBase;
 import com.hp.hpl.jena.sparql.algebra.op.OpJoin;
-import com.hp.hpl.jena.sparql.core.Var;
 import org.deri.cqels.engine.*;
 import org.deri.cqels.lang.cqels.OpStream;
 
@@ -15,6 +14,10 @@ import java.util.List;
 public class ConvertLQP2FlinkProgram implements RouterVisitor {
 
     private static String flinkProgram = "";
+
+    public static void addToFlinkProgram(String newPiece) {
+        ConvertLQP2FlinkProgram.flinkProgram += newPiece;
+    }
 
     @Override
     public void visit(ThroughRouter router) {
@@ -27,17 +30,18 @@ public class ConvertLQP2FlinkProgram implements RouterVisitor {
                 System.out.println(iter.getOp().toString()+"----\n");
             }
 
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
     }
 
     public void visit(OpStream op) {
-        if (op.getWindow() instanceof TripleWindow) visit((TripleWindow) op.getWindow());
-        else if (op.getWindow() instanceof RangeWindow) visit((RangeWindow) op.getWindow());
-        op.visit(new OpVisitorBase());
+        IndexingDataStream.insertSolutionMapping(IndexingDataStream.getIndice(), VariablesProjection.getVars());
+
+        ParsingURL.parsing(op.getGraphNode().toString());
+
+        flinkProgram += String.format("\t\tDataStream<Triple> rdfStream%s = LoadRDFStream.fromSocket(env, \"%s\", %s);\n\n",
+                IndexingDataStream.getIndice(), ParsingURL.getServer(), ParsingURL.getPort());
 
         if (op.getWindow() instanceof TripleWindow) {
             //System.out.println("es TripleWindow");
@@ -46,29 +50,17 @@ public class ConvertLQP2FlinkProgram implements RouterVisitor {
                 Long triplesNumber = (Long) getField("t", op.getWindow());
                 List<Triple> listTriplePattern = op.getBasicPattern().getList();
                 flinkProgram += ConvertTriplePatternGroup.convert(listTriplePattern, triplesNumber, 'T');
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
+            } catch (NoSuchFieldException | IllegalAccessException e) {
                 e.printStackTrace();
             }
         } /*else if (op.getWindow().getClass() == RangeWindow.class) {
             System.out.println("es RangeWindow");
-            RangeWindow rangeWindow = (RangeWindow) opStream.getWindow();
+            RangeWindow rangeWindow = (RangeWindow) op.getWindow();
             System.out.println("Duration: "+(rangeWindow.getDuration()/1000000)+"\n"+
                     "Sile: "+(rangeWindow.getSlide()/1000000));
         }*/
 
-
-    }
-
-    public void visit(TripleWindow window) {
-        System.out.println(window);
-
-        //
-    }
-
-    public void visit(RangeWindow window) {
-        System.out.println(window);
+        VariablesProjection.projectVars();
     }
 
     public void visit(OpJoin opJoin) {
@@ -131,33 +123,11 @@ public class ConvertLQP2FlinkProgram implements RouterVisitor {
     @Override
     public void visit(ProjectRouter router) {
         System.out.println("ProjectRouter router");
-
-        ArrayList<String> variables = new ArrayList<>();
-
-        String varsProject = "";
-        List<Var> vars = new ArrayList<>();
         try {
-            vars = (ArrayList) getField("vars", router);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+            VariablesProjection.setVars((ArrayList) getField("vars", router));
+        } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
-        for (Var iter : vars) {
-            String var = "\"?"+iter.getVarName()+"\"";
-            if(!varsProject.equals(""))
-                varsProject += ",";
-            varsProject += var;
-            variables.add(var);
-        }
-
-        flinkProgram += "\t\tDataStream<SolutionMapping> sm"+(SolutionMapping.getIndice())+" = sm"+(SolutionMapping.getIndice()-1)+"\n" +
-                "\t\t\t.map(new Project(new String[]{"+varsProject+"}));\n\n";
-
-        SolutionMapping.insertSolutionMapping(SolutionMapping.getIndice(), variables);
-
-        //opProject.getSubOp().visit(this);
-
     }
 
     @Override
@@ -194,6 +164,4 @@ public class ConvertLQP2FlinkProgram implements RouterVisitor {
     public void visit(OpRouter router) {
         System.out.println("OpRouter router");
     }
-
-
 }
