@@ -151,8 +151,6 @@ public class ConvertLQP2FlinkProgram implements RouterVisitor {
             variables.add(var);
         }
 
-        //System.out.println("ProjectRouter: "+variables.toString());
-
         flinkProgram += "\t\tDataStream<SolutionMapping> sm"+(SolutionMapping.getIndice())+" = sm"+(SolutionMapping.getIndice()-1)+"\n" +
                 "\t\t\t.map(new Project(new String[]{"+varsProject+"}));\n\n";
 
