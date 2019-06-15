@@ -47,8 +47,8 @@ public class LogicalQueryPlan2FlinkProgram {
                 "\t\t}\n\n" +
 
                 "\t\t//************ Environment (DataStream) and Stream (RDF Stream) ************\n" +
-                "\t\tfinal StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();\n" +
-                "\t\tDataStream<Triple> rdfStream = LoadRDFStream.fromSocket(env, params.get(\"server\"), Integer.parseInt(params.get(\"port\")));\n\n" +
+                "\t\tfinal StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();\n\n" +
+                //"\t\tDataStream<Triple> rdfStream = LoadRDFStream.fromSocket(env, params.get(\"server\"), Integer.parseInt(params.get(\"port\")));\n\n" +
 
                 "\t\t//************ Applying Transformations ************\n";
 
@@ -59,9 +59,10 @@ public class LogicalQueryPlan2FlinkProgram {
         flinkProgram += "\t\t//************ Sink  ************\n" +
                 "\t\tsm"+(SolutionMapping.getIndice()-1) +
                 ".writeAsText(params.get(\"output\")+\""+className+"-Flink-Result\", FileSystem.WriteMode.OVERWRITE)\n" +
-                "\t\t\t.setParallelism(1);\n\n" +
-                "\t\tenv.execute(\"CQELS-QL to Flink Programan - DataStream API\");\n" +
-                "\t}\n}";
+                "\t\t\t.setParallelism(1);\n\n"+
+                "\t\tenv.execute(\"CQELS-QL to Flink Programan - DataStream API\");\n";
+
+        flinkProgram += "\t}\n}";
 
         return flinkProgram;
     }
