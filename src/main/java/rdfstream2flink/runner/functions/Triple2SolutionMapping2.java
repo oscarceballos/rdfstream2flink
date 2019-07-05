@@ -21,32 +21,21 @@ public class Triple2SolutionMapping2 extends ProcessWindowFunction<Triple, Solut
         this.object = o;
     }
 
-    public boolean evalObject(Node node){
-        Boolean flag = false;
-        if(node.isLiteral()) {
-            if (node.getLiteralValue().toString().equals(object)){
-                flag = true;
-            }
-        } else if (node.isURI()) {
-            if (node.getURI().toString().equals(object)) {
-                flag = true;
-            }
-        }
-        return flag;
-    }
-
     @Override
     public void process(Node key, Context context, Iterable<Triple> in, Collector<SolutionMapping> out) throws Exception{
         int i=1;
         for (Triple t : in) {
+            //System.out.println("t.subject--->" +  t.getSubject().toString() + " --- subject--->" + subject);
+            //System.out.println("t.object--->" +  t.getObject().toString() + " --- object--->" + object);
+            //System.out.println("=============================================================================");
             if(subject.contains("?") && !predicate.contains("?") && !object.contains("?")) {
-                if(t.getPredicate().toString().equals(predicate) && evalObject(t.getObject())) {
+                if(t.getPredicate().toString().equals(predicate) && t.getObject().toString().equals(object)) {
                     SolutionMapping sm = new SolutionMapping();
                     sm.putMapping(subject, t.getSubject());
                     out.collect(sm);
                 }
             } else if(!subject.contains("?") && predicate.contains("?") && !object.contains("?")) {
-                if(t.getSubject().toString().equals(subject) && evalObject(t.getObject())) {
+                if(t.getSubject().toString().equals(subject) && t.getObject().toString().equals(object)) {
                     SolutionMapping sm = new SolutionMapping();
                     sm.putMapping(predicate, t.getPredicate());
                     out.collect(sm);
@@ -73,7 +62,7 @@ public class Triple2SolutionMapping2 extends ProcessWindowFunction<Triple, Solut
                     //System.out.println("****** Window: "+context.window() + " i: "+i);
                 }
             } else if(subject.contains("?") && predicate.contains("?") && !object.contains("?")) {
-                if(evalObject(t.getObject())) {
+                if(t.getObject().toString().equals(object)) {
                     SolutionMapping sm = new SolutionMapping();
                     sm.putMapping(subject, t.getSubject());
                     sm.putMapping(predicate, t.getPredicate());

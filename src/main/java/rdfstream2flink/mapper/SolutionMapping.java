@@ -7,7 +7,8 @@ import java.util.Map;
 public class SolutionMapping {
 
     private static HashMap<Integer, ArrayList<String>> solutionMapping = new HashMap<>();
-    public static int indice = 1;
+    public static int indiceSM = 1;
+    public static int indiceDS = 0;
 
     public static ArrayList<String> getKey(int indice_sm_left, int indice_sm_right){
         ArrayList<String> listKeys = new ArrayList<>();
@@ -39,11 +40,20 @@ public class SolutionMapping {
 
     public static void insertSolutionMapping(Integer indice_sm, ArrayList<String> variables){
         solutionMapping.put(indice_sm, variables);
-        indice++;
+        indiceSM++;
     }
 
-    public static int getIndice(){
-        return indice;
+    public static int getIndiceSM(){
+        return indiceSM;
+    }
+
+    public static int getIndiceDS(){
+        return indiceDS;
+    }
+
+    public static int incrementIDS() {
+        indiceDS++;
+        return indiceDS;
     }
 
     public static HashMap<Integer, ArrayList<String>> getSolutionMapping(){
