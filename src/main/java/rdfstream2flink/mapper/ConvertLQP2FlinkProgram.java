@@ -1,5 +1,6 @@
 package rdfstream2flink.mapper;
 
+import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.sparql.algebra.Op;
 import com.hp.hpl.jena.sparql.algebra.OpVisitorBase;
@@ -7,8 +8,10 @@ import com.hp.hpl.jena.sparql.algebra.op.OpJoin;
 import com.hp.hpl.jena.sparql.algebra.op.OpProject;
 import com.hp.hpl.jena.sparql.algebra.op.OpQuadPattern;
 import com.hp.hpl.jena.sparql.core.Var;
+import org.apache.flink.streaming.api.windowing.time.Time;
 import org.deri.cqels.engine.*;
 import org.deri.cqels.lang.cqels.OpStream;
+import org.w3c.dom.ranges.Range;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -59,14 +62,38 @@ public class ConvertLQP2FlinkProgram extends OpVisitorBase {
     }
 
     public void visit(OpStream op) {
+        flinkProgram += getRDFStream(/*op.getGraphNode().toString()*/"localhost", 5555);
         if (op.getWindow() instanceof TripleWindow) {
+            Triple t = op.getBasicPattern().get(0);
             try {
                 Long triplesNumber = (Long) getField("t", op.getWindow());
-                List<Triple> listTriplePattern = op.getBasicPattern().getList();
-                flinkProgram += ConvertTriplePatternGroup.convert(listTriplePattern, triplesNumber, 'T');
+                flinkProgram += "\t\tDataStream<SolutionMapping> sm" + SolutionMapping.getIndiceSM() +
+                        " = rdfStream"+SolutionMapping.getIndiceDS()+"\n" +
+                        "\t\t\t.keyBy(new WindowKeySelector())\n" +
+                        "\t\t\t.countWindow("+triplesNumber+")\n" +
+                        "\t\t\t.process(new Triple2SolutionMapping2(" +
+                        "\""+t.getSubject().toString()+"\", " +
+                        "\""+t.getPredicate().toString()+"\", " +
+                        "\""+evalObject(t.getObject())+"\"));\n\n";
+                SolutionMapping.insertSolutionMapping(SolutionMapping.getIndiceSM(), null);
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 e.printStackTrace();
             }
+        }
+        else if (op.getWindow() instanceof RangeWindow) {
+            Triple t = op.getBasicPattern().get(0);
+            RangeWindow w = (RangeWindow) op.getWindow();
+            flinkProgram += "\t\tDataStream<SolutionMapping> sm" + SolutionMapping.getIndiceSM() +
+                    " = rdfStream"+SolutionMapping.getIndiceDS()+"\n" +
+                    "\t\t\t.keyBy(new WindowKeySelector())\n" +
+                    ((w.getSlide()>0) ? ("\t\t\t.window(SlidingProcessingTimeWindows.of(" + getTime(w.getDuration()) +
+                            ", "+getTime(w.getSlide())+"))\n") :
+                            ("\t\t\t.window(TumblingProcessingTimeWindows.of("+ getTime(w.getDuration())+"))\n")) +
+                    "\t\t\t.apply(new Triple2SolutionMapping2(" +
+                    "\""+t.getSubject().toString()+"\", " +
+                    "\""+t.getPredicate().toString()+"\", " +
+                    "\""+evalObject(t.getObject())+"\"));\n\n";
+            SolutionMapping.insertSolutionMapping(SolutionMapping.getIndiceSM(), null);
         }
     }
 
@@ -124,8 +151,35 @@ public class ConvertLQP2FlinkProgram extends OpVisitorBase {
         return "";
     }
 
+    public static String evalObject(Node node){
+        if(node.isLiteral()) {
+            return node.toString().replace("\"", "\\\"");
+        }
+        return node.toString();
+    }
+
     public static String getFlinkProgram(){
         return flinkProgram;
+    }
+
+    private String getTime(long t) {
+        if(t/1000>0) {
+            t /= 1000;
+            if(t/60>0) {
+                t /= 60;
+                if(t/60 > 0) {
+                    t /= 60;
+                    if(t/24 > 0) {
+                        t /= 24;
+                        return "Time.days("+t+")";
+                    }
+                    return "Time.hours("+t+")";
+                }
+                return "Time.minutes("+t+")";
+            }
+            return "Time.seconds("+t+")";
+        }
+        return "Time.milliseconds("+t+")";
     }
 
     public Object getField(String fieldName, Object obj) throws NoSuchFieldException, IllegalAccessException {

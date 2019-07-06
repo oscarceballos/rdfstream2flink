@@ -41,11 +41,6 @@ public class LogicalQueryPlan2FlinkProgram {
                 "\npublic class "+className+" {\n" +
                 "\tpublic static void main(String[] args) throws Exception {\n\n" +
 
-                "\t\tfinal ParameterTool params = ParameterTool.fromArgs(args);\n\n" +
-                "\t\tif (!params.has(\"server\") && !params.has(\"port\")) {\n" +
-                "\t\t\tSystem.out.println(\"Use --server to specify server and use --port to specify port number.\");\n" +
-                "\t\t}\n\n" +
-
                 "\t\t//************ Environment (DataStream) and Stream (RDF Stream) ************\n" +
                 "\t\tfinal StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();\n\n";
 

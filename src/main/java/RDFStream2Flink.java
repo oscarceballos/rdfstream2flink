@@ -37,7 +37,7 @@ public class RDFStream2Flink {
 
         System.out.println(flinkProgram);
 
-        //CreateFlinkProgram javaFlinkProgram = new CreateFlinkProgram(flinkProgram, path);
-        //javaFlinkProgram.createFlinkProgram();
+        CreateFlinkProgram javaFlinkProgram = new CreateFlinkProgram(flinkProgram, path);
+        javaFlinkProgram.createFlinkProgram();
     }
 }
