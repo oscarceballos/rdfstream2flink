@@ -11,13 +11,12 @@ import org.deri.cqels.engine.*;
 import org.deri.cqels.lang.cqels.OpStream;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class ConvertLQP2FlinkProgram extends OpVisitorBase {
 
     private static String flinkProgram = "";
+    private static Map<Integer, Object> windows = new HashMap<Integer, Object>();
 
     @Override
     public void visit(OpProject opProject) {
@@ -49,8 +48,10 @@ public class ConvertLQP2FlinkProgram extends OpVisitorBase {
 
     public void visit(Object op, Boolean beginJoin) {
         if(beginJoin && op instanceof OpStream) {
+            flinkProgram += getRDFStream(/*op.getGraphNode().toString()*/"localhost", 5555);
             flinkProgram += "\t\tDataStream<SolutionMapping> sm" + SolutionMapping.getIndiceSM() + " = rdfStream"+SolutionMapping.getIndiceDS()+"\n" +
                     ConvertTriplePattern.convert(((OpStream) op).getBasicPattern().get(0), SolutionMapping.getIndiceSM());
+            windows.put(SolutionMapping.getIndiceSM(), ((OpStream) op).getWindow());
         }
         else {
             ((Op) op).visit(this);
@@ -58,13 +59,6 @@ public class ConvertLQP2FlinkProgram extends OpVisitorBase {
     }
 
     public void visit(OpStream op) {
-        flinkProgram += String.format(
-                "\t\t//************ Applying Transformations To rdfStream%s ************\n",
-                SolutionMapping.incrementIDS());
-        flinkProgram += String.format(
-                "\t\tDataStream<Triple> rdfStream%s = LoadRDFStream.fromSocket(env, \"%s\", %s);\n\n",
-                SolutionMapping.getIndiceDS(), /*op.getGraphNode().toString()*/"localhost", 5555);
-
         if (op.getWindow() instanceof TripleWindow) {
             try {
                 Long triplesNumber = (Long) getField("t", op.getWindow());
@@ -80,26 +74,54 @@ public class ConvertLQP2FlinkProgram extends OpVisitorBase {
         Op opLeft = opJoin.getLeft();
         visit(opLeft, true);
         int indice_sm_left = SolutionMapping.getIndiceSM()-1;
+        Object lW = windows.get(SolutionMapping.getIndiceSM());
 
         Op opRight = opJoin.getRight();
         visit(opRight, true);
         int indice_sm_right = SolutionMapping.getIndiceSM()-1;
+        Object rW = windows.get(SolutionMapping.getIndiceSM());
 
         int indice_sm_join = SolutionMapping.getIndiceSM();
 
         ArrayList<String> listKeys = SolutionMapping.getKey(indice_sm_left, indice_sm_right);
 
         if(listKeys.size()>0) {
-            String keys = JoinKeys.keys(listKeys);
-            flinkProgram += "\t\tDataStream<SolutionMapping> sm" + indice_sm_join + " = sm" + indice_sm_left + ".join(sm" + indice_sm_right + ")\n" +
-                    "\t\t\t.where(new JoinKeySelector(new String[]{"+keys+"}))\n" +
-                    "\t\t\t.equalTo(new JoinKeySelector(new String[]{"+keys+"}))\n" +
-                    "\t\t\t.window(TumblingProcessingTimeWindows.of(Time.seconds(5)))\n" +
-                    "\t\t\t.apply(new Join());" +
-                    "\n\n";
+            if((lW instanceof TripleWindow) || (rW instanceof TripleWindow)) {
+                String keys = JoinKeys.keys(listKeys);
+                try {
+                    flinkProgram += "\t\tDataStream<SolutionMapping> sm" + indice_sm_join + " = sm" + indice_sm_left + ".join(sm" + indice_sm_right + ")\n" +
+                            "\t\t\t.where(new JoinKeySelector(new String[]{" + keys + "}))\n" +
+                            "\t\t\t.equalTo(new JoinKeySelector(new String[]{" + keys + "}))\n" +
+                            "\t\t\t.window(GlobalWindows.create())\n" +
+                            "\t\t\t.trigger(CountTrigger.of("+(getField("t", (lW!=null) ? lW : rW).toString())+"))\n" +
+                            "\t\t\t.apply(new Join());" +
+                            "\n\n";
+                } catch (NoSuchFieldException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            } else if((lW instanceof RangeWindow) || (rW instanceof RangeWindow)) {
+                String keys = JoinKeys.keys(listKeys);
+                flinkProgram += "\t\tDataStream<SolutionMapping> sm" + indice_sm_join + " = sm" + indice_sm_left + ".join(sm" + indice_sm_right + ")\n" +
+                        "\t\t\t.where(new JoinKeySelector(new String[]{"+keys+"}))\n" +
+                        "\t\t\t.equalTo(new JoinKeySelector(new String[]{"+keys+"}))\n" +
+                        "\t\t\t.window(TumblingProcessingTimeWindows.of(Time.seconds(5)))\n" +
+                        "\t\t\t.apply(new Join());" +
+                        "\n\n";
+            }
         }
 
         SolutionMapping.join(indice_sm_join, indice_sm_left, indice_sm_right);
+    }
+
+    public static String getRDFStream(String host, Integer port) {
+        if(!flinkProgram.contains(String.format("LoadRDFStream.fromSocket(env, \"%s\", %s)",
+                host, port))) {
+            return String.format(
+                    "\t\t//************ Applying Transformations To rdfStream%s ************\n" +
+                            "\t\tDataStream<Triple> rdfStream%s = LoadRDFStream.fromSocket(env, \"%s\", %s);\n\n",
+                        SolutionMapping.incrementIDS(), SolutionMapping.getIndiceDS(), host, port);
+        }
+        return "";
     }
 
     public static String getFlinkProgram(){

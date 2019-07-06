@@ -43,6 +43,11 @@ public class SolutionMapping {
         indiceSM++;
     }
 
+    public static int incrementISM() {
+        indiceSM++;
+        return indiceSM;
+    }
+
     public static int getIndiceSM(){
         return indiceSM;
     }
