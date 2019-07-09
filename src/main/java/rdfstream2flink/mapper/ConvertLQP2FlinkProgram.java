@@ -15,6 +15,7 @@ import org.w3c.dom.ranges.Range;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class ConvertLQP2FlinkProgram extends OpVisitorBase {
 
@@ -86,10 +87,10 @@ public class ConvertLQP2FlinkProgram extends OpVisitorBase {
             flinkProgram += "\t\tDataStream<SolutionMapping> sm" + SolutionMapping.getIndiceSM() +
                     " = rdfStream"+SolutionMapping.getIndiceDS()+"\n" +
                     "\t\t\t.keyBy(new WindowKeySelector())\n" +
-                    ((w.getSlide()>0) ? ("\t\t\t.window(SlidingProcessingTimeWindows.of(" + getTime(w.getDuration()) +
-                            ", "+getTime(w.getSlide())+"))\n") :
+                    ((w.getSlide()>0) ?
+                            ("\t\t\t.window(SlidingProcessingTimeWindows.of(" + getTime(w.getDuration()) +  ", "+getTime(w.getSlide())+"))\n") :
                             ("\t\t\t.window(TumblingProcessingTimeWindows.of("+ getTime(w.getDuration())+"))\n")) +
-                    "\t\t\t.apply(new Triple2SolutionMapping2(" +
+                    "\t\t\t.apply(new Triple2SolutionMapping3(" +
                     "\""+t.getSubject().toString()+"\", " +
                     "\""+t.getPredicate().toString()+"\", " +
                     "\""+evalObject(t.getObject())+"\"));\n\n";
@@ -128,12 +129,14 @@ public class ConvertLQP2FlinkProgram extends OpVisitorBase {
                 }
             } else if((lW instanceof RangeWindow) || (rW instanceof RangeWindow)) {
                 String keys = JoinKeys.keys(listKeys);
+                RangeWindow w = (RangeWindow) ((lW!=null) ? lW : rW);
                 flinkProgram += "\t\tDataStream<SolutionMapping> sm" + indice_sm_join + " = sm" + indice_sm_left + ".join(sm" + indice_sm_right + ")\n" +
                         "\t\t\t.where(new JoinKeySelector(new String[]{"+keys+"}))\n" +
                         "\t\t\t.equalTo(new JoinKeySelector(new String[]{"+keys+"}))\n" +
-                        "\t\t\t.window(TumblingProcessingTimeWindows.of(Time.seconds(5)))\n" +
-                        "\t\t\t.apply(new Join());" +
-                        "\n\n";
+                        ((w.getSlide()>0) ?
+                                ("\t\t\t.window(SlidingProcessingTimeWindows.of(" + getTime(w.getDuration()) +  ", "+getTime(w.getSlide())+"))\n") :
+                                ("\t\t\t.window(TumblingProcessingTimeWindows.of("+ getTime(w.getDuration())+"))\n")) +
+                        "\t\t\t.apply(new Join());\n\n";
             }
         }
 
@@ -163,23 +166,8 @@ public class ConvertLQP2FlinkProgram extends OpVisitorBase {
     }
 
     private String getTime(long t) {
-        if(t/1000>0) {
-            t /= 1000;
-            if(t/60>0) {
-                t /= 60;
-                if(t/60 > 0) {
-                    t /= 60;
-                    if(t/24 > 0) {
-                        t /= 24;
-                        return "Time.days("+t+")";
-                    }
-                    return "Time.hours("+t+")";
-                }
-                return "Time.minutes("+t+")";
-            }
-            return "Time.seconds("+t+")";
-        }
-        return "Time.milliseconds("+t+")";
+        t /= 1E6;
+        return "Time.of(" + t + ", TimeUnit.MILLISECONDS)";
     }
 
     public Object getField(String fieldName, Object obj) throws NoSuchFieldException, IllegalAccessException {

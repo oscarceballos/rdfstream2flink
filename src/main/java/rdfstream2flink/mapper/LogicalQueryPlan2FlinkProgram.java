@@ -36,7 +36,8 @@ public class LogicalQueryPlan2FlinkProgram {
                 "import org.apache.flink.streaming.api.windowing.windows.TimeWindow;\n" +
                 "import org.apache.jena.graph.Triple;\n" +
                 "import rdfstream2flink.runner.*;\n" +
-                "import rdfstream2flink.runner.functions.*;\n" +
+                "import rdfstream2flink.runner.functions.*;\n\n" +
+                "import java.util.concurrent.TimeUnit;\n\n" +
 
                 "\npublic class "+className+" {\n" +
                 "\tpublic static void main(String[] args) throws Exception {\n\n" +
@@ -50,8 +51,8 @@ public class LogicalQueryPlan2FlinkProgram {
 
         flinkProgram += "\t\t//************ Sink  ************\n" +
                 "\t\tsm"+(SolutionMapping.getIndiceSM()-1) +
-                /*".writeAsText(params.get(\"output\")+\""+className+"-Flink-Result\", FileSystem.WriteMode.OVERWRITE)\n" +
-                "\t\t\t.setParallelism(1);\n\n"+*/
+                ".writeAsText(params.get(\"output\")+\""+className+"-Flink-Result\", FileSystem.WriteMode.OVERWRITE)\n" +
+                "\t\t\t.setParallelism(1);\n\n"+
                 ".print();\n\n" +
                 "\t\tenv.execute(\"CQELS-QL to Flink Programan - DataStream API\");\n";
 
