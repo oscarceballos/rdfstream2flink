@@ -25,7 +25,7 @@ public class RDFStream2Flink {
         LoadQueryFile queryFile = new LoadQueryFile(path.toString());
         String queryString = queryFile.loadSQFile();
 
-        System.out.print(queryString);
+        //System.out.print(queryString);
 
         Query2LogicalQueryPlan query2LQP = new Query2LogicalQueryPlan(queryString);
         OpRouter logicalQueryPlan = query2LQP.translationSQ2LQP();
