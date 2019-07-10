@@ -1,15 +1,15 @@
 package rdfstream2flink.mapper;
 
-import org.deri.cqels.engine.OpRouter;
+import com.hp.hpl.jena.sparql.algebra.Op;
 
 import java.nio.file.Path;
 
 public class LogicalQueryPlan2FlinkProgram {
 
-    private OpRouter logicalQueryPlan;
+    private Op logicalQueryPlan;
     private String className;
 
-    public LogicalQueryPlan2FlinkProgram(OpRouter logicalQueryPlan, Path path){
+    public LogicalQueryPlan2FlinkProgram(Op logicalQueryPlan, Path path){
         this.logicalQueryPlan = logicalQueryPlan;
         this.className = path.getFileName().toString();
         this.className = this.className.substring(0, this.className.indexOf('.'));
@@ -36,30 +36,24 @@ public class LogicalQueryPlan2FlinkProgram {
                 "import org.apache.flink.streaming.api.windowing.windows.TimeWindow;\n" +
                 "import org.apache.jena.graph.Triple;\n" +
                 "import rdfstream2flink.runner.*;\n" +
-                "import rdfstream2flink.runner.functions.*;\n" +
+                "import rdfstream2flink.runner.functions.*;\n\n" +
+                "import java.util.concurrent.TimeUnit;\n\n" +
 
                 "\npublic class "+className+" {\n" +
                 "\tpublic static void main(String[] args) throws Exception {\n\n" +
 
-                "\t\tfinal ParameterTool params = ParameterTool.fromArgs(args);\n\n" +
-                "\t\tif (!params.has(\"server\") && !params.has(\"port\")) {\n" +
-                "\t\t\tSystem.out.println(\"Use --server to specify server and use --port to specify port number.\");\n" +
-                "\t\t}\n\n" +
-
                 "\t\t//************ Environment (DataStream) and Stream (RDF Stream) ************\n" +
-                "\t\tfinal StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();\n\n" +
-                //"\t\tDataStream<Triple> rdfStream = LoadRDFStream.fromSocket(env, params.get(\"server\"), Integer.parseInt(params.get(\"port\")));\n\n" +
-
-                "\t\t//************ Applying Transformations ************\n";
+                "\t\tfinal StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();\n\n";
 
         logicalQueryPlan.visit(new ConvertLQP2FlinkProgram());
 
         flinkProgram += ConvertLQP2FlinkProgram.getFlinkProgram();
 
         flinkProgram += "\t\t//************ Sink  ************\n" +
-                "\t\tsm"+(SolutionMapping.getIndice()-1) +
+                "\t\tsm"+(SolutionMapping.getIndiceSM()-1) +
                 ".writeAsText(params.get(\"output\")+\""+className+"-Flink-Result\", FileSystem.WriteMode.OVERWRITE)\n" +
                 "\t\t\t.setParallelism(1);\n\n"+
+                ".print();\n\n" +
                 "\t\tenv.execute(\"CQELS-QL to Flink Programan - DataStream API\");\n";
 
         flinkProgram += "\t}\n}";
