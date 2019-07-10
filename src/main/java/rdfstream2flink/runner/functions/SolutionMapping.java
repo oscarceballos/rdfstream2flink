@@ -45,6 +45,7 @@ public class SolutionMapping {
 
 	public SolutionMapping join(SolutionMapping sm){
         for (Map.Entry<String, Node> hm : sm.getMapping().entrySet()) {
+            //System.out.println("left--> "+this.getMapping().toString()+"\n\tright--> "+sm.toString());
             if (!existMapping(hm.getKey(), hm.getValue())) {
                 this.putMapping(hm.getKey(), hm.getValue());
             }

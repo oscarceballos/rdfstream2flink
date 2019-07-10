@@ -1,29 +1,22 @@
 package rdfstream2flink.runner.functions;
 
-import org.apache.flink.api.common.functions.FlatMapFunction;
-import org.apache.flink.streaming.api.functions.windowing.ProcessWindowFunction;
 import org.apache.flink.streaming.api.functions.windowing.WindowFunction;
-import org.apache.flink.streaming.api.windowing.windows.GlobalWindow;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
-import org.apache.flink.streaming.api.windowing.windows.Window;
 import org.apache.flink.util.Collector;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.Triple;
 
-//Triple to SolutionMapping - Map Function
-public class Triple2SolutionMapping2 extends ProcessWindowFunction<Triple, SolutionMapping, Node, GlobalWindow> {
+public class Triple2SolutionMapping4 implements WindowFunction<Triple, SolutionMapping, Node, TimeWindow> {
 
-    private String subject, predicate, object = null;
+    private String subject, predicate, object;
 
-    public Triple2SolutionMapping2(String s, String p, String o){
+    public Triple2SolutionMapping4(String s, String p, String o){
         this.subject = s;
         this.predicate = p;
         this.object = o;
     }
 
-    @Override
-    public void process(Node key, Context context, Iterable<Triple> in, Collector<SolutionMapping> out) throws Exception{
-        int i=1;
+    public void apply(Node key, TimeWindow w, Iterable<Triple> in, Collector<SolutionMapping> out) {
         for (Triple t : in) {
             if(subject.contains("?") && !predicate.contains("?") && !object.contains("?")) {
                 if(t.getPredicate().toString().equals(predicate) && t.getObject().toString().equals(object)) {
@@ -55,8 +48,9 @@ public class Triple2SolutionMapping2 extends ProcessWindowFunction<Triple, Solut
                     SolutionMapping sm = new SolutionMapping();
                     sm.putMapping(subject, t.getSubject());
                     sm.putMapping(object, t.getObject());
+                    //System.out.println("sm--> " + sm.getMapping().toString());
+                    System.out.println("opbject--> "+object+" w.start--> "+w.getStart()+" w.end--> "+w.getEnd());
                     out.collect(sm);
-                    //System.out.println("****** Window: "+context.window() + " i: "+i);
                 }
             } else if(subject.contains("?") && predicate.contains("?") && !object.contains("?")) {
                 if(t.getObject().toString().equals(object)) {
@@ -72,7 +66,6 @@ public class Triple2SolutionMapping2 extends ProcessWindowFunction<Triple, Solut
                 sm.putMapping(object, t.getObject());
                 out.collect(sm);
             }
-            i++;
         }
     }
 }
