@@ -32,12 +32,12 @@ public class RDFStream2Flink {
         Op logicalQueryPlan = query2LQP.translationSQ2LQP();
         System.out.println(logicalQueryPlan);
 
-        LogicalQueryPlan2FlinkProgram lQP2FlinkProgram = new LogicalQueryPlan2FlinkProgram(logicalQueryPlan, path);
-        String flinkProgram = lQP2FlinkProgram.logicalQueryPlan2FlinkProgram();
+        //LogicalQueryPlan2FlinkProgram lQP2FlinkProgram = new LogicalQueryPlan2FlinkProgram(logicalQueryPlan, path);
+        //String flinkProgram = lQP2FlinkProgram.logicalQueryPlan2FlinkProgram();
 
-        System.out.println(flinkProgram);
+        //System.out.println(flinkProgram);
 
-        CreateFlinkProgram javaFlinkProgram = new CreateFlinkProgram(flinkProgram, path);
-        javaFlinkProgram.createFlinkProgram();
+        //CreateFlinkProgram javaFlinkProgram = new CreateFlinkProgram(flinkProgram, path);
+        //javaFlinkProgram.createFlinkProgram();
     }
 }
