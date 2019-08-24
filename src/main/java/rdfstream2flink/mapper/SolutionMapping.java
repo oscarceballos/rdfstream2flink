@@ -35,7 +35,6 @@ public class SolutionMapping {
             }
         }
         insertSolutionMapping(indice_sm, variables);
-
     }
 
     public static void insertSolutionMapping(Integer indice_sm, ArrayList<String> variables){

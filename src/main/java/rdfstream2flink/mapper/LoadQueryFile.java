@@ -4,6 +4,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class LoadQueryFile {
 
@@ -27,5 +34,29 @@ public class LoadQueryFile {
             System.err.format("IOException: %s%n", e);
         }
         return query;
+    }
+
+    public String maskUris(String host, int initialPort) throws Exception {
+        String query = this.loadSQFile();
+        int port = initialPort;
+
+        String newQuery = "";
+        Pattern pattern = Pattern.compile("([ ]*<[ ]*)([-./:a-zA-Z0-9#]*)([ ]*>[ ]*\\[[ a-zA-Z0-9]*\\])");
+        Matcher matcher;
+        String[] streamSegments = query.trim().replace("STREAM", "stream").split("stream");
+        if (streamSegments.length == 1)
+            throw new Exception("Error parsing query, no stream statements found for: " + query);
+        else {
+            for (String s : streamSegments) {
+                matcher = pattern.matcher(s);
+                if(matcher.find() && matcher.groupCount()>=3) {
+                    newQuery += matcher.replaceFirst("STREAM" + matcher.group(1) + host + ":" + port + matcher.group(3));
+                    port++;
+                } else newQuery += s;
+            }
+        }
+
+        if(newQuery.equals("")) newQuery = query;
+        return newQuery;
     }
 }

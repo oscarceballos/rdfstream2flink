@@ -41,7 +41,10 @@ public class LogicalQueryPlan2FlinkProgram {
 
                 "\npublic class "+className+" {\n" +
                 "\tpublic static void main(String[] args) throws Exception {\n\n" +
-
+                "\t\tfinal ParameterTool params = ParameterTool.fromArgs(args);\n\n" +
+                "\t\tif (!params.has(\"output\")) {\n" +
+                "\t\t\tSystem.out.println(\"Use --output to specify output path.\");\n" +
+                "\t\t}\n\n"+
                 "\t\t//************ Environment (DataStream) and Stream (RDF Stream) ************\n" +
                 "\t\tfinal StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();\n\n";
 
@@ -51,8 +54,8 @@ public class LogicalQueryPlan2FlinkProgram {
 
         flinkProgram += "\t\t//************ Sink  ************\n" +
                 "\t\tsm"+(SolutionMapping.getIndiceSM()-1) +
-                ".writeAsText(params.get(\"output\")+\""+className+"-Flink-Result\", FileSystem.WriteMode.OVERWRITE)\n" +
-                "\t\t\t.setParallelism(1);\n\n"+
+                //".writeAsText(params.get(\"output\")+\""+className+"-Flink-Result\", FileSystem.WriteMode.OVERWRITE)\n" +
+                //"\t\t\t.setParallelism(1);\n\n"+
                 ".print();\n\n" +
                 "\t\tenv.execute(\"CQELS-QL to Flink Programan - DataStream API\");\n";
 

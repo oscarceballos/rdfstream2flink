@@ -12,7 +12,7 @@ import rdfstream2flink.mapper.Query2LogicalQueryPlan;
 
 public class RDFStream2Flink {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         Path path;
 
         if (args != null && args.length == 1) {
@@ -24,7 +24,8 @@ public class RDFStream2Flink {
         }
 
         LoadQueryFile queryFile = new LoadQueryFile(path.toString());
-        String queryString = queryFile.loadSQFile();
+        String queryString = queryFile.maskUris("localhost", 5555);
+        //String queryString = queryFile.loadSQFile();
 
         System.out.print(queryString);
 
