@@ -19,20 +19,8 @@
 package rdfstream2flink.runner;
 
 import org.apache.flink.annotation.PublicEvolving;
-import org.apache.flink.api.java.DataSet;
-import org.apache.flink.api.java.ExecutionEnvironment;
-import org.apache.flink.api.java.operators.DataSource;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.util.Preconditions;
-import org.apache.jena.graph.Triple;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.Statement;
-import org.apache.jena.util.FileManager;
-
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Implements the "WordCount" program that computes a simple word occurrence histogram
@@ -72,17 +60,17 @@ public class LoadRDFStream {
      */
 
     @PublicEvolving
-    public static DataStreamSource<Triple> fromSocket(StreamExecutionEnvironment environment, String hostname, int port, char delimiter, long maxRetry) {
+    public static DataStreamSource<TripleTS> fromSocket(StreamExecutionEnvironment environment, String hostname, int port, char delimiter, long maxRetry) {
         return environment.addSource(new SocketRDFStreamFunction(hostname, port, delimiter, maxRetry), "Socket");
     }
 
     @PublicEvolving
-    public static DataStreamSource<Triple> fromSocket(StreamExecutionEnvironment environment, String hostname, int port, char delimiter) {
+    public static DataStreamSource<TripleTS> fromSocket(StreamExecutionEnvironment environment, String hostname, int port, char delimiter) {
         return fromSocket(environment, hostname, port, delimiter, 0);
     }
 
     @PublicEvolving
-    public static DataStreamSource<Triple> fromSocket(StreamExecutionEnvironment environment, String hostname, int port) {
+    public static DataStreamSource<TripleTS> fromSocket(StreamExecutionEnvironment environment, String hostname, int port) {
         return fromSocket(environment, hostname, port, '\n');
     }
 

@@ -6,15 +6,19 @@ import org.apache.jena.riot.system.StreamRDFBase;
 
 public class SourceContextAdapter extends StreamRDFBase {
 
-	private SourceContext<Triple> ctx;
+	private SourceContext<TripleTS> ctx;
 
-	public SourceContextAdapter(SourceContext<Triple> ctx){
+	public SourceContextAdapter(SourceContext<TripleTS> ctx){
 		this.ctx = ctx;
 	}
 
-	@Override
-	public void triple(Triple t){
+	public void tripleTS(TripleTS t){
 		ctx.collect(t);
+	}
+
+	@Override
+	public void triple(Triple t) {
+		ctx.collect(new TripleTS(t));
 	}
 
 	@Override

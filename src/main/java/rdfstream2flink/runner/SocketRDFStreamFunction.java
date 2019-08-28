@@ -1,7 +1,6 @@
 package rdfstream2flink.runner;
 
 import org.apache.flink.util.IOUtils;
-import org.apache.jena.graph.Triple;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 
@@ -16,7 +15,7 @@ import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 import org.apache.flink.streaming.api.functions.source.SourceFunction;
 
-public class SocketRDFStreamFunction implements SourceFunction<Triple>, Serializable {
+public class SocketRDFStreamFunction implements SourceFunction<TripleTS>, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -56,7 +55,7 @@ public class SocketRDFStreamFunction implements SourceFunction<Triple>, Serializ
 	}
 
 	@Override
-	public void run(SourceContext<Triple> ctx) throws Exception{
+	public void run(SourceContext<TripleTS> ctx) throws Exception{
 		//while(isRunning){
 			try(Socket socket = new Socket()){
 				currentSocket = socket;

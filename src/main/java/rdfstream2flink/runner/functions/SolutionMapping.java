@@ -1,13 +1,14 @@
 package rdfstream2flink.runner.functions;
 
-//import sparql2flink.runner.functions.filter.FilterConvert;
-
 import org.apache.jena.graph.Node;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
 public class SolutionMapping {
+
+    private static final String TIME_STAMP_KEY = "TimeStamp";
 
 	private HashMap<String, Node> mapping = new HashMap<>();
 
@@ -43,9 +44,15 @@ public class SolutionMapping {
 		return flag;
 	}
 
+	public long getTimeStamp() {
+	    if(mapping.containsKey(TIME_STAMP_KEY)) {
+	        return Long.parseLong(mapping.get(TIME_STAMP_KEY).toString());
+        }
+	    return (new Timestamp(System.currentTimeMillis())).getTime();
+    }
+
 	public SolutionMapping join(SolutionMapping sm){
         for (Map.Entry<String, Node> hm : sm.getMapping().entrySet()) {
-            //System.out.println("left--> "+this.getMapping().toString()+"\n\tright--> "+sm.toString());
             if (!existMapping(hm.getKey(), hm.getValue())) {
                 this.putMapping(hm.getKey(), hm.getValue());
             }

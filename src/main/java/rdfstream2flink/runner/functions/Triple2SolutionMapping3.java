@@ -4,9 +4,9 @@ import org.apache.flink.streaming.api.functions.windowing.WindowFunction;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.Collector;
 import org.apache.jena.graph.Node;
-import org.apache.jena.graph.Triple;
+import rdfstream2flink.runner.TripleTS;
 
-public class Triple2SolutionMapping3 implements WindowFunction<Triple, SolutionMapping, Node, TimeWindow> {
+public class Triple2SolutionMapping3 implements WindowFunction<TripleTS, SolutionMapping, Node, TimeWindow> {
 
     private String subject, predicate, object;
 
@@ -16,8 +16,8 @@ public class Triple2SolutionMapping3 implements WindowFunction<Triple, SolutionM
         this.object = o;
     }
 
-    public void apply(Node key, TimeWindow w, Iterable<Triple> in, Collector<SolutionMapping> out) {
-        for (Triple t : in) {
+    public void apply(Node key, TimeWindow w, Iterable<TripleTS> in, Collector<SolutionMapping> out) {
+        for (TripleTS t : in) {
             if(subject.contains("?") && !predicate.contains("?") && !object.contains("?")) {
                 if(t.getPredicate().toString().equals(predicate) && t.getObject().toString().equals(object)) {
                     SolutionMapping sm = new SolutionMapping();
