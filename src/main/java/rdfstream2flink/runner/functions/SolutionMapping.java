@@ -10,55 +10,48 @@ public class SolutionMapping {
 
     private static final String TIME_STAMP_KEY = "TimeStamp";
 
-	private HashMap<String, Node> mapping = new HashMap<>();
+    private HashMap<String, Node> mapping = new HashMap<>();
 
-	public SolutionMapping() {}
+    public SolutionMapping() {}
 
-	public void SolutionMapping(HashMap<String, Node> sm){
-		this.mapping = sm;
-	}
+    public void SolutionMapping(HashMap<String, Node> sm){
+        this.mapping = sm;
+    }
 
     public void setMapping(HashMap<String, Node> mapping){
         this.mapping = mapping;
     }
 
-	public HashMap<String, Node> getMapping(){
-		return mapping;
-	}
+    public HashMap<String, Node> getMapping(){
+        return mapping;
+    }
 
-	public void putMapping(String var, Node val) {
-		mapping.put(var, val);
-	}
+    public void putMapping(String var, Node val) {
+        mapping.put(var, val);
+    }
 
-	public Node getValue(String var){
-		return mapping.get(var);
-	}
+    public Node getValue(String var){
+        return mapping.get(var);
+    }
 
-	public boolean existMapping(String var, Node val){
-		Boolean flag = false;
+    public boolean existMapping(String var, Node val){
+        Boolean flag = false;
         if(mapping.containsKey(var)) {
             if(mapping.get(var).equals(val)) {
                 flag = true;
             }
         }
-		return flag;
-	}
-
-	public long getTimeStamp() {
-	    if(mapping.containsKey(TIME_STAMP_KEY)) {
-	        return Long.parseLong(mapping.get(TIME_STAMP_KEY).toString());
-        }
-	    return (new Timestamp(System.currentTimeMillis())).getTime();
+        return flag;
     }
 
-	public SolutionMapping join(SolutionMapping sm){
+    public SolutionMapping join(SolutionMapping sm){
         for (Map.Entry<String, Node> hm : sm.getMapping().entrySet()) {
             if (!existMapping(hm.getKey(), hm.getValue())) {
                 this.putMapping(hm.getKey(), hm.getValue());
             }
         }
-		return this;
-	}
+        return this;
+    }
 
     public SolutionMapping leftJoin(SolutionMapping sm) {
         if(sm != null) {
@@ -71,15 +64,15 @@ public class SolutionMapping {
         return this;
     }
 
-	public SolutionMapping newSolutionMapping(String[] vars){
-		SolutionMapping sm = new SolutionMapping();
-		for (String var : vars) {
+    public SolutionMapping newSolutionMapping(String[] vars){
+        SolutionMapping sm = new SolutionMapping();
+        for (String var : vars) {
             if(var != null) {
                 sm.putMapping(var, mapping.get(var));
             }
-		}
-		return sm;
-	}
+        }
+        return sm;
+    }
 
     public SolutionMapping project(String[] vars){
         SolutionMapping sm = new SolutionMapping();
@@ -96,7 +89,7 @@ public class SolutionMapping {
 		return FilterConvert.convert(expr, this.getMapping());
 	}*/
 
-	public SolutionMapping distinct(String[] vars){
+    public SolutionMapping distinct(String[] vars){
         SolutionMapping sm = new SolutionMapping();
         for (String var : vars) {
             if(mapping.containsKey(var)) {
@@ -104,16 +97,16 @@ public class SolutionMapping {
             }
         }
         return sm;
-	}
+    }
 
-	@Override
-	public String toString() {
-		String sm="";
-		for (Map.Entry<String, Node> hm : mapping.entrySet()) {
-		    if(hm.getValue() != null) {
+    @Override
+    public String toString() {
+        String sm="";
+        for (Map.Entry<String, Node> hm : mapping.entrySet()) {
+            if(hm.getValue() != null) {
                 sm += hm.getKey() + "-->" + hm.getValue().toString() + "\t";
             }
-		}
-		return sm;
-	}
+        }
+        return sm;
+    }
 }

@@ -24,14 +24,14 @@ public class ConvertTriplePatternGroup {
         switch (window) {
             case 'T':
                 if (listKeys.size() > 0) {
-                String keys = JoinKeys.keys(listKeys);
-                sm += "\t\tDataStream<SolutionMapping> sm" + indice_sm_join + " = sm" + indice_sm_left + ".join(sm" + indice_sm_right + ")\n" +
-                        "\t\t\t.where(new JoinKeySelector(new String[]{" + keys + "}))\n" +
-                        "\t\t\t.equalTo(new JoinKeySelector(new String[]{" + keys + "}))\n" +
-                        "\t\t\t.window(GlobalWindows.create())\n" +
-                        "\t\t\t.trigger(CountTrigger.of(1))\n" +
-                        "\t\t\t.apply(new Join());" +
-                        "\n\n";
+                    String keys = JoinKeys.keys(listKeys);
+                    sm += "\t\tDataStream<SolutionMapping> sm" + indice_sm_join + " = sm" + indice_sm_left + ".join(sm" + indice_sm_right + ")\n" +
+                            "\t\t\t.where(new JoinKeySelector(new String[]{" + keys + "}))\n" +
+                            "\t\t\t.equalTo(new JoinKeySelector(new String[]{" + keys + "}))\n" +
+                            "\t\t\t.window(GlobalWindows.create())\n" +
+                            "\t\t\t.trigger(CountTrigger.of(1))\n" +
+                            "\t\t\t.apply(new Join());" +
+                            "\n\n";
                 }
                 break;
             case 'R':
@@ -59,23 +59,23 @@ public class ConvertTriplePatternGroup {
                 bgp += joinSolutionMapping(indiceSM,indiceSM-2, indiceSM-1, window);
                 count = 1;
             } else {
-                    if(listTriplePatterns.size()==1) {
-                        Triple t = listTriplePatterns.get(0);
-                        bgp = "\t\tDataStream<SolutionMapping> sm" + indiceSM + " = rdfStream"+SolutionMapping.getIndiceDS()+"\n" +
-                                "\t\t\t.keyBy(new WindowKeySelector())\n" +
-                                "\t\t\t.countWindow("+triplesNumber+")\n" +
-                                "\t\t\t.process(new Triple2SolutionMapping2(" +
-                                        "\""+t.getSubject().toString()+"\", " +
-                                        "\""+t.getPredicate().toString()+"\", " +
-                                        "\""+evalObject(t.getObject())+"\"));\n" +
-                                "\n";
-                        SolutionMapping.insertSolutionMapping(indiceSM, null);
-                    } else {
-                        bgp += "\t\tDataStream<SolutionMapping> sm" + indiceSM + " = rdfStream"+SolutionMapping.getIndiceDS()+"\n" +
-                                ConvertTriplePattern.convert(listTriplePatterns.get(indiceLTP), indiceSM);
-                    }
-                    indiceLTP += 1;
-                    count += 1;
+                if(listTriplePatterns.size()==1) {
+                    Triple t = listTriplePatterns.get(0);
+                    bgp = "\t\tDataStream<SolutionMapping> sm" + indiceSM + " = rdfStream"+SolutionMapping.getIndiceDS()+"\n" +
+                            "\t\t\t.keyBy(new WindowKeySelector())\n" +
+                            "\t\t\t.countWindow("+triplesNumber+")\n" +
+                            "\t\t\t.process(new Triple2SolutionMapping2(" +
+                            "\""+t.getSubject().toString()+"\", " +
+                            "\""+t.getPredicate().toString()+"\", " +
+                            "\""+evalObject(t.getObject())+"\"));\n" +
+                            "\n";
+                    SolutionMapping.insertSolutionMapping(indiceSM, null);
+                } else {
+                    bgp += "\t\tDataStream<SolutionMapping> sm" + indiceSM + " = rdfStream"+SolutionMapping.getIndiceDS()+"\n" +
+                            ConvertTriplePattern.convert(listTriplePatterns.get(indiceLTP), indiceSM);
+                }
+                indiceLTP += 1;
+                count += 1;
             }
             return convertTPG(listTriplePatterns, indiceLTP, count, SolutionMapping.getIndiceSM(), bgp, triplesNumber, window);
         }

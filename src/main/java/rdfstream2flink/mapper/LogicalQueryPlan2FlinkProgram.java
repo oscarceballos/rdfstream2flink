@@ -28,8 +28,8 @@ public class LogicalQueryPlan2FlinkProgram {
                 "import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;\n" +
                 "import org.apache.flink.streaming.api.functions.timestamps.AscendingTimestampExtractor;\n" +
                 "import org.apache.flink.streaming.api.windowing.assigners.GlobalWindows;\n" +
-                "import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;\n" +
-                "import org.apache.flink.streaming.api.windowing.assigners.TumblingProcessingTimeWindows;\n" +
+                "import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;\n" +
+                "import org.apache.flink.streaming.api.windowing.assigners.*;\n" +
                 "import org.apache.flink.streaming.api.windowing.time.Time;\n" +
                 "import org.apache.flink.streaming.api.windowing.triggers.CountTrigger;\n" +
                 "import org.apache.flink.streaming.api.windowing.windows.GlobalWindow;\n" +
@@ -54,9 +54,9 @@ public class LogicalQueryPlan2FlinkProgram {
 
         flinkProgram += "\t\t//************ Sink  ************\n" +
                 "\t\tsm"+(SolutionMapping.getIndiceSM()-1) +
-                //".writeAsText(params.get(\"output\")+\""+className+"-Flink-Result\", FileSystem.WriteMode.OVERWRITE)\n" +
-                //"\t\t\t.setParallelism(1);\n\n"+
-                ".print();\n\n" +
+                ".writeAsText(params.get(\"output\")+\""+className+"-Flink-Result\", FileSystem.WriteMode.OVERWRITE)\n" +
+                "\t\t\t.setParallelism(1);\n\n"+
+                //".print();\n\n" +
                 "\t\tenv.execute(\"CQELS-QL to Flink Programan - DataStream API\");\n";
 
         flinkProgram += "\t}\n}";

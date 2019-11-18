@@ -69,7 +69,9 @@ public class ConvertLQP2FlinkProgram extends OpVisitorBase {
         if(createDS) flinkProgram += getRDFStream(op.getGraphNode().toString());
 
         String solW = "\t\tDataStream<SolutionMapping> sm" + SolutionMapping.getIndiceSM() +
-                " = rdfStream"+SolutionMapping.getIndiceDS()+"\n" +
+                " = rdfStream" + SolutionMapping.getIndiceDS() + "\n" +
+                ((SolutionMapping.getTypeTime().equals("E")) ?
+                        "\t\t\t.assignTimestampsAndWatermarks(new TimestampExtractor())\n":"") +
                 "\t\t\t.keyBy(new WindowKeySelector())\n";
         if (op.getWindow() instanceof TripleWindow) {
             Triple t = op.getBasicPattern().get(0);
@@ -88,9 +90,7 @@ public class ConvertLQP2FlinkProgram extends OpVisitorBase {
         else if (op.getWindow() instanceof RangeWindow) {
             Triple t = op.getBasicPattern().get(0);
             RangeWindow w = (RangeWindow) op.getWindow();
-            solW += ((w.getSlide()>0) ?
-                            ("\t\t\t.window(SlidingProcessingTimeWindows.of(" + getTime(w.getDuration()) +  ", "+getTime(w.getSlide())+"))\n") :
-                            ("\t\t\t.window(TumblingProcessingTimeWindows.of("+ getTime(w.getDuration())+"))\n")) +
+            solW += getRangeWindow(w) +
                     "\t\t\t.apply(new Triple2SolutionMapping3(" +
                     "\""+t.getSubject().toString()+"\", " +
                     "\""+t.getPredicate().toString()+"\", " +
@@ -146,6 +146,17 @@ public class ConvertLQP2FlinkProgram extends OpVisitorBase {
         SolutionMapping.join(indice_sm_join, indice_sm_left, indice_sm_right);
     }
 
+    private String getRangeWindow(RangeWindow w) {
+        if (SolutionMapping.getTypeTime().equals("E")) {
+            return (w.getSlide()>0) ?
+                    ("\t\t\t.window(SlidingEventTimeWindows.of(" + getTime(w.getDuration()) +  ", "+getTime(w.getSlide())+"))\n") :
+                    ("\t\t\t.window(TumblingEventTimeWindows.of("+ getTime(w.getDuration())+"))\n");
+        }
+        return (w.getSlide()>0) ?
+                ("\t\t\t.window(SlidingProcessingTimeWindows.of(" + getTime(w.getDuration()) +  ", "+getTime(w.getSlide())+"))\n") :
+                ("\t\t\t.window(TumblingProcessingTimeWindows.of("+ getTime(w.getDuration())+"))\n");
+    }
+
     public static String getRDFStream(String uri) {
         String host = uri;
         Integer port = null;
@@ -158,8 +169,8 @@ public class ConvertLQP2FlinkProgram extends OpVisitorBase {
                 host, port))) {
             return String.format(
                     "\t\t//************ Applying Transformations To rdfStream%s ************\n" +
-                            "\t\tDataStream<Triple> rdfStream%s = LoadRDFStream.fromSocket(env, \"%s\", %s);\n\n",
-                        SolutionMapping.incrementIDS(), SolutionMapping.getIndiceDS(), host, port);
+                            "\t\tDataStream<TripleTS> rdfStream%s = LoadRDFStream.fromSocket(env, \"%s\", %s);\n\n",
+                    SolutionMapping.incrementIDS(), SolutionMapping.getIndiceDS(), host, port);
         }
         return "";
     }

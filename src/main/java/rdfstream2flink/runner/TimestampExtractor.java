@@ -7,6 +7,8 @@ import javax.annotation.Nullable;
 import java.sql.Timestamp;
 
 public class TimestampExtractor implements AssignerWithPunctuatedWatermarks<TripleTS> {
+    public static Long backTimestampEvent = null;
+    public static Long backTimestampTrans = null;
 
     @Nullable
     @Override
@@ -16,6 +18,18 @@ public class TimestampExtractor implements AssignerWithPunctuatedWatermarks<Trip
 
     @Override
     public long extractTimestamp(TripleTS tripleTS, long l) {
-        return tripleTS.getTimeStamp();
+        return getTimestampFromCurrentTimestamp(tripleTS.getTimeStamp());
+    }
+
+    private long getTimestampFromCurrentTimestamp(long t) {
+        if(backTimestampEvent ==null) backTimestampEvent = t;
+        if(backTimestampTrans ==null) backTimestampTrans = (new Timestamp(System.currentTimeMillis())).getTime();
+
+        long diff = backTimestampEvent - t;
+        backTimestampTrans += diff;
+
+        backTimestampEvent = t;
+
+        return backTimestampTrans;
     }
 }

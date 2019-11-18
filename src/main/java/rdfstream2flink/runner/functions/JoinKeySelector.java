@@ -21,6 +21,6 @@ public class JoinKeySelector implements KeySelector<SolutionMapping, String> {
                 value += ",";
             }
         }
-		return value;
+        return value;
     }
 }

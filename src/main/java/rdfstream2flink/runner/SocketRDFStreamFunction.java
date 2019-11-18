@@ -4,6 +4,9 @@ import org.apache.flink.util.IOUtils;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -55,18 +58,20 @@ public class SocketRDFStreamFunction implements SourceFunction<TripleTS>, Serial
 	}
 
 	@Override
-	public void run(SourceContext<TripleTS> ctx) throws Exception{
+	public void run(SourceContext<TripleTS> ctx) {
 		//while(isRunning){
-			try(Socket socket = new Socket()){
-				currentSocket = socket;
-				currentSocket.connect(new InetSocketAddress(hostname, port), CONNECTION_TIMEOUT_TIME);
-				RDFDataMgr.parse(new SourceContextAdapter(ctx), socket.getInputStream(), Lang.NT);
-			}
+		try(Socket socket = new Socket()){
+			currentSocket = socket;
+			currentSocket.connect(new InetSocketAddress(hostname, port), CONNECTION_TIMEOUT_TIME);
+			RDFDataMgr.parse(new SourceContextAdapter(ctx), socket.getInputStream(), Lang.NQ);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		//}
 	}
 
 	@Override
-	public void cancel(){
+	public void cancel() {
 		isRunning = false;
 		//we need to close the socket as well, because the Thread.interrupt() function will
 		//not wake the thread in the socketStream.read() method when blocked.

@@ -24,22 +24,22 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 /**
  * Implements the "WordCount" program that computes a simple word occurrence histogram
- * over text files. 
- * 
+ * over text files.
+ *
  * <p>
  * The input is a plain text file with lines separated by newline characters.
- * 
+ *
  * <p>
  * Usage: <code>WordCount --input &lt;path&gt; --output &lt;path&gt;</code><br>
- * 
+ *
  * <p>
  * This example shows how to:
  * <ul>
  * <li>write a simple Flink program.
  * <li>use Tuple data types.
- * <li>write and use user-defined functions. 
+ * <li>write and use user-defined functions.
  * </ul>
- * 
+ *
  */
 @SuppressWarnings("serial")
 public class LoadRDFStream {

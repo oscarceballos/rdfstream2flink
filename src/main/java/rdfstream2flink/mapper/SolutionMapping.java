@@ -7,8 +7,9 @@ import java.util.Map;
 public class SolutionMapping {
 
     private static HashMap<Integer, ArrayList<String>> solutionMapping = new HashMap<>();
-    public static int indiceSM = 1;
-    public static int indiceDS = 0;
+    private static String typeTime = "E"; // For default is used Event Time
+    private static int indiceSM = 1;
+    private static int indiceDS = 0;
 
     public static ArrayList<String> getKey(int indice_sm_left, int indice_sm_right){
         ArrayList<String> listKeys = new ArrayList<>();
@@ -62,6 +63,14 @@ public class SolutionMapping {
 
     public static HashMap<Integer, ArrayList<String>> getSolutionMapping(){
         return solutionMapping;
+    }
+
+    public static String getTypeTime() {
+        return typeTime;
+    }
+
+    public static void setTypeTime(String typeTime) {
+        SolutionMapping.typeTime = typeTime;
     }
 
     @Override

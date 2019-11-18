@@ -1,8 +1,10 @@
 package rdfstream2flink.runner;
 
 import org.apache.flink.streaming.api.functions.source.SourceFunction.SourceContext;
+import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.riot.system.StreamRDFBase;
+import org.apache.jena.sparql.core.Quad;
 
 public class SourceContextAdapter extends StreamRDFBase {
 
@@ -12,8 +14,11 @@ public class SourceContextAdapter extends StreamRDFBase {
 		this.ctx = ctx;
 	}
 
-	public void tripleTS(TripleTS t){
-		ctx.collect(t);
+	@Override
+	public void quad(Quad quad) {
+		Long timeStamp = Long.valueOf(
+				quad.getGraph().getURI().replace(XSDDatatype.XSDlong.getURI()+"#", ""));
+		ctx.collect(new TripleTS(quad.getSubject(), quad.getPredicate(), quad.getObject(), timeStamp));
 	}
 
 	@Override
@@ -22,5 +27,5 @@ public class SourceContextAdapter extends StreamRDFBase {
 	}
 
 	@Override
-	public void finish(){}
+	public void finish() {}
 }

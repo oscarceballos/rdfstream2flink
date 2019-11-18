@@ -8,10 +8,6 @@ import java.sql.Timestamp;
 public class TripleTS extends Triple {
     private Long timeStamp;
 
-    public TripleTS() {
-        super(null, null, null);
-    }
-
     public TripleTS(Node s, Node p, Node o, Long timeStamp) {
         super(s, p, o);
         this.timeStamp = (timeStamp==null) ? (new Timestamp(System.currentTimeMillis())).getTime() : timeStamp;
@@ -38,5 +34,11 @@ public class TripleTS extends Triple {
 
     public void setTimeStamp(Long timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    @Override
+    public String toString() {
+        return "TripleTS{" + super.toString() +
+                ", timeStamp=" + timeStamp + '}';
     }
 }

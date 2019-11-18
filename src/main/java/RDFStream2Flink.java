@@ -1,13 +1,13 @@
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 
 import com.hp.hpl.jena.sparql.algebra.Op;
 import org.deri.cqels.engine.OpRouter;
-import rdfstream2flink.mapper.CreateFlinkProgram;
-import rdfstream2flink.mapper.LoadQueryFile;
-import rdfstream2flink.mapper.LogicalQueryPlan2FlinkProgram;
-import rdfstream2flink.mapper.Query2LogicalQueryPlan;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import rdfstream2flink.mapper.*;
 
 
 public class RDFStream2Flink {
@@ -15,17 +15,31 @@ public class RDFStream2Flink {
     public static void main(String[] args) throws Exception {
         Path path;
 
-        if (args != null && args.length == 1) {
-            path = Paths.get(args[0]);
-        } else {
-            System.out.println("\nYou should to specify path query file argument.\nFor example: path_query_file/query_file.rq\n"+
+        HashMap<String, String> parameters = new HashMap<>();
+        Logger logger = LoggerFactory.getLogger(RDFStream2Flink.class);
+
+        for (String s : args) {
+            parameters.put(s.split("=")[0].trim(), s.split("=")[1].trim());
+        }
+
+        if (parameters.containsKey("path"))
+            path = Paths.get(parameters.get("path"));
+        else {
+            logger.warn("\nYou should to specify path query file argument.\nFor example: path_query_file/query_file.rq\n"+
                     "\nExecuting sample with default SPARQL query saved in << examples >> directory");
             path = Paths.get("./examples/query.rq");
         }
 
+        if (parameters.containsKey("typeTime")) SolutionMapping.setTypeTime(parameters.get("typeTime"));
+
         LoadQueryFile queryFile = new LoadQueryFile(path.toString());
-        String queryString = queryFile.maskUris("localhost", 5555);
-        //String queryString = queryFile.loadSQFile();
+
+        String queryString;
+        if(parameters.containsKey("host") && parameters.containsKey("port"))
+            queryString = queryFile.maskUris(
+                    parameters.get("host"),
+                    Integer.parseInt(parameters.get("port")));
+        else queryString = queryFile.loadSQFile();
 
         System.out.print(queryString);
 
