@@ -26,7 +26,7 @@ under the License.
 	<packaging>jar</packaging>
 
 	<name>CQELS Query to Flink Program (DataStream)</name>
-	<url>http://www.univalle.edu.co</url>
+	<url>http://www.udenar.edu.co</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
