@@ -2,19 +2,20 @@ package org.deri.cqels.data;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
+import org.deri.cqels.engine.ExecContext;
 import org.openjena.atlas.iterator.IteratorConcat;
 import org.openjena.atlas.lib.Tuple;
 
 import com.hp.hpl.jena.sparql.core.Var;
 import com.hp.hpl.jena.tdb.store.NodeId;
-import org.deri.cqels.engine.ExecContext;
 
 public class TupleMapping extends MappingBase {
 	
 	HashMap<Var, Integer> var2Idx;
 	Tuple<NodeId> tuple;
-	public TupleMapping(ExecContext context, Tuple<NodeId> tuple, HashMap<Var, Integer> var2Idx ){
+	public TupleMapping(ExecContext context,Tuple<NodeId> tuple,HashMap<Var, Integer> var2Idx ){
 		super(context);
 		this.var2Idx=var2Idx;
 		this.tuple=tuple;

@@ -2,9 +2,10 @@ package org.deri.cqels.data;
 
 import java.util.Iterator;
 
+import org.deri.cqels.engine.ExecContext;
+
 import com.hp.hpl.jena.sparql.core.Var;
 import com.hp.hpl.jena.sparql.engine.binding.Binding;
-import org.deri.cqels.engine.ExecContext;
 
 public class Binding2Mapping extends MappingBase {
 	Binding binding;

@@ -2,13 +2,14 @@ package org.deri.cqels.engine.iterator;
 
 import java.util.NoSuchElementException;
 
+import org.deri.cqels.data.Mapping;
+
 import org.openjena.atlas.logging.Log;
 
 import com.hp.hpl.jena.query.QueryCancelledException;
 import com.hp.hpl.jena.query.QueryException;
 import com.hp.hpl.jena.query.QueryFatalException;
 import com.hp.hpl.jena.sparql.util.Utils;
-import org.deri.cqels.data.Mapping;
 
 public abstract class MappingIteratorBase implements MappingIterator {
 	

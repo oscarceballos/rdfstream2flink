@@ -1,22 +1,26 @@
 package org.deri.cqels.engine;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
-import com.hp.hpl.jena.sparql.algebra.op.OpProject;
-import com.hp.hpl.jena.sparql.core.Var;
+import org.deri.cqels.data.ExtendMapping;
 import org.deri.cqels.data.Mapping;
 import org.deri.cqels.data.ProjectMapping;
 import org.deri.cqels.engine.iterator.MappingIterator;
 import org.deri.cqels.engine.iterator.NullMappingIter;
 
-/**
+import com.hp.hpl.jena.sparql.algebra.op.OpExtend;
+import com.hp.hpl.jena.sparql.algebra.op.OpProject;
+import com.hp.hpl.jena.sparql.core.Var;
+import com.hp.hpl.jena.sparql.core.VarExprList;
+/** 
  * This class implements the router with project operator
  * @author		Danh Le Phuoc
  * @author 		Chan Le Van
  * @organization DERI Galway, NUIG, Ireland  www.deri.ie
  * @email 	danh.lephuoc@deri.org
  * @email   chan.levan@deri.org
- * @see org.deri.cqels.engine.OpRouter1
+ * @see OpRouter1
  */
 public class ProjectRouter extends OpRouter1 {
 	List<Var> vars;

@@ -5,17 +5,16 @@
  * All rights reserved.
  */
 package org.deri.cqels.lang.cqels;
-import com.hp.hpl.jena.graph.*;
-import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.sparql.core.Var;
-import com.hp.hpl.jena.sparql.syntax.*;
-import com.hp.hpl.jena.sparql.expr.*;
-import com.hp.hpl.jena.sparql.path.*;
-import com.hp.hpl.jena.sparql.expr.aggregate.*;
-import com.hp.hpl.jena.update.*;
-import com.hp.hpl.jena.sparql.modify.request.*;
 import org.deri.cqels.engine.*;
-
+import com.hp.hpl.jena.graph.* ;
+import com.hp.hpl.jena.query.* ;
+import com.hp.hpl.jena.sparql.core.Var ;
+import com.hp.hpl.jena.sparql.syntax.* ;
+import com.hp.hpl.jena.sparql.expr.* ;
+import com.hp.hpl.jena.sparql.path.* ;
+import com.hp.hpl.jena.sparql.expr.aggregate.* ;
+import com.hp.hpl.jena.update.* ;
+import com.hp.hpl.jena.sparql.modify.request.* ;
 public class CQELSParser extends CQELSParserBase implements CQELSParserConstants {
     boolean allowAggregatesInExpressions = false ;
 
@@ -5828,7 +5827,7 @@ public class CQELSParser extends CQELSParserBase implements CQELSParserConstants
     throw generateParseException();
   }
 
-  static private final class LookaheadSuccess extends Error { }
+  static private final class LookaheadSuccess extends java.lang.Error { }
   final private LookaheadSuccess jj_ls = new LookaheadSuccess();
   private boolean jj_scan_token(int kind) {
     if (jj_scanpos == jj_lastpos) {

@@ -1,5 +1,4 @@
 package org.deri.cqels.engine;
-
 import java.util.TimerTask;
 public class Purifier extends TimerTask {
 	RangeWindow w;

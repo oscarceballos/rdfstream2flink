@@ -1,16 +1,16 @@
 package org.deri.cqels.engine.iterator;
 
+import org.deri.cqels.data.Mapping;
+import org.deri.cqels.data.Mapping2Binding;
+import org.deri.cqels.engine.ExecContext;
 import org.openjena.atlas.logging.Log;
 
 import com.hp.hpl.jena.sparql.expr.ExprException;
 import com.hp.hpl.jena.sparql.expr.ExprList;
-import org.deri.cqels.data.Mapping;
-import org.deri.cqels.data.Mapping2Binding;
-import org.deri.cqels.engine.ExecContext;
 
 public class MappingIterFilterExpr extends MappingIterProcessBinding {
 	ExprList  exprList;
-	public MappingIterFilterExpr(MappingIterator mIter, ExprList exprList, ExecContext context) {
+	public MappingIterFilterExpr(MappingIterator mIter,ExprList exprList, ExecContext context) {
 		super(mIter, context);
 		this.exprList = exprList;
 	}

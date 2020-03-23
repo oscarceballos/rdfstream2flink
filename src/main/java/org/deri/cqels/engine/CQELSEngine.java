@@ -1,6 +1,8 @@
 package org.deri.cqels.engine;
 
 import com.espertech.esper.client.Configuration;
+import org.deri.cqels.data.EnQuad;
+
 import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPServiceProviderManager;
 import com.espertech.esper.client.EPStatement;
@@ -9,9 +11,7 @@ import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.tdb.store.NodeId;
-import org.deri.cqels.data.EnQuad;
-
-/**
+/** 
  * This class implements CQELS engine. It has an Esper Service provider and context belonging to
  * 
  * @author		Danh Le Phuoc
@@ -60,13 +60,13 @@ public class CQELSEngine {
 	 * @param o object
 	 */
 	public void send(Node graph, Node s, Node p, Node o) {
-		this.provider.getEPRuntime().sendEvent(new EnQuad(encode(graph), encode(s),
+		this.provider.getEPRuntime().sendEvent(new EnQuad(encode(graph), encode(s), 
 														  encode(p), encode(o)));
 	}
 	
 	public EPStatement addWindow(Quad quad, String window) {
 		return 	this.provider.getEPAdministrator().createEPL(
-					"select * from org.deri.cqels.data.EnQuad"
+					"select * from org.deri.cqels.data.EnQuad" 
 				    + matchPattern(quad) + window);
 	}
 	

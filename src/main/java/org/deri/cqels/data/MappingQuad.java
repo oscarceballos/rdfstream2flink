@@ -2,15 +2,15 @@ package org.deri.cqels.data;
 
 import java.util.Iterator;
 
+import org.deri.cqels.engine.ExecContext;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.sparql.core.Var;
-import org.deri.cqels.engine.ExecContext;
 
 public class MappingQuad extends MappingBase {
 	
 	Quad quad;
 	EnQuad enQuad;
-	public MappingQuad(ExecContext context, Quad quad, EnQuad enQuad) {
+	public MappingQuad(ExecContext context,Quad quad, EnQuad enQuad) {
 		super(context);
 		this.quad=quad;
 		this.enQuad=enQuad;

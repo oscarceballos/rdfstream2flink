@@ -3,12 +3,14 @@ package org.deri.cqels.engine;
 import org.deri.cqels.data.Mapping;
 import org.deri.cqels.engine.iterator.MappingIterator;
 
+import com.hp.hpl.jena.sparql.algebra.Op;
+
 public class RoutingRunner extends Thread {
 	
 	ExecContext context;
 	MappingIterator itr;
 	OpRouterBase router;
-	public RoutingRunner (ExecContext context, MappingIterator itr, OpRouterBase router){
+	public RoutingRunner (ExecContext context,MappingIterator itr,OpRouterBase router){
 		this.context=context;
 		this.itr=itr;
 		this.router=router;

@@ -1,6 +1,5 @@
 package org.deri.cqels.engine;
-
-/**
+/** 
  * This class implements the now window - a triple-based window with just newest element
  * @author		Danh Le Phuoc
  * @author 		Chan Le Van

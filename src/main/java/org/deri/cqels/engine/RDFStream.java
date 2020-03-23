@@ -2,8 +2,7 @@ package org.deri.cqels.engine;
 
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
-
-/**
+/** 
  * @author		Danh Le Phuoc
  * @organization DERI Galway, NUIG, Ireland  www.deri.ie
  * @email 	danh.lephuoc@deri.org

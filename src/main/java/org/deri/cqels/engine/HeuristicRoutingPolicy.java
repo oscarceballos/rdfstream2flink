@@ -4,8 +4,12 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
+import org.deri.cqels.data.Mapping;
+import org.deri.cqels.lang.cqels.ElementStreamGraph;
+import org.deri.cqels.lang.cqels.OpStream;
 import org.openjena.atlas.lib.SetUtils;
 
 import com.espertech.esper.client.EPStatement;
@@ -28,11 +32,8 @@ import com.hp.hpl.jena.sparql.syntax.ElementFilter;
 import com.hp.hpl.jena.sparql.syntax.ElementGroup;
 import com.hp.hpl.jena.sparql.syntax.ElementPathBlock;
 import com.hp.hpl.jena.sparql.syntax.ElementTriplesBlock;
-import org.deri.cqels.data.Mapping;
-import org.deri.cqels.lang.cqels.ElementStreamGraph;
-import org.deri.cqels.lang.cqels.OpStream;
-
-/**
+import com.hp.hpl.jena.sparql.syntax.Template;
+/** 
  * This class uses heuristic approach to build an execution plan
  * 
  * @author		Danh Le Phuoc
@@ -43,7 +44,7 @@ import org.deri.cqels.lang.cqels.OpStream;
  */
 public class HeuristicRoutingPolicy extends RoutingPolicyBase {
     
-    public HeuristicRoutingPolicy(ExecContext context) {
+    public HeuristicRoutingPolicy(ExecContext context) {    
     	super(context);
     	this.compiler = new LogicCompiler();
     	this.compiler.set(this);
@@ -147,7 +148,7 @@ public class HeuristicRoutingPolicy extends RoutingPolicyBase {
     				if((!cFlag.get(j)) && SetUtils.intersectionP(curVars, 
     							(Set<Var>)OpVars.allVars(caches.get(j).getOp()))) {
     					curOp = OpJoin.create(curOp,caches.get(j).getOp());
-    					OpRouter newRouter = new JoinRouter(context, (OpJoin)curOp,
+    					OpRouter newRouter = new JoinRouter(context, (OpJoin)curOp, 
     														curRouter, caches.get(j));
     					curRouter = addRouter(curRouter, newRouter);
     					cFlag.set(j);
@@ -158,12 +159,10 @@ public class HeuristicRoutingPolicy extends RoutingPolicyBase {
     			}
     			
     			for(int j = 0; j < windows.size() && (!skip); j++) {
-    				boolean a = (!wFlag.get(j));
-    				boolean b = SetUtils.intersectionP(curVars,
-							(Set<Var>)OpVars.allVars(windows.get(j).getOp()));
-    				if(a && b) {
+    				if((!wFlag.get(j)) && SetUtils.intersectionP(curVars, 
+    							(Set<Var>)OpVars.allVars(windows.get(j).getOp()))) {
     					curOp = OpJoin.create(curOp,windows.get(j).getOp());
-    					OpRouter newRouter = new JoinRouter(context, (OpJoin)curOp,
+    					OpRouter newRouter = new JoinRouter(context, (OpJoin)curOp, 
     														curRouter,windows.get(j));
     					curRouter = addRouter(curRouter, newRouter);
     					wFlag.set(j);
@@ -222,7 +221,7 @@ public class HeuristicRoutingPolicy extends RoutingPolicyBase {
     	OpRouter qR = generateRoutingPolicy(query);
     	if(query.isSelectType()) {
     		///TODO
-    		ContinuousSelect rootRouter =(ContinuousSelect)addRouter(qR,
+    		ContinuousSelect rootRouter =(ContinuousSelect)addRouter(qR, 
     				new ContinuousSelect(context, query, qR));
     		rootRouter.visit(new TimerVisitor());
     		return rootRouter;
@@ -239,8 +238,8 @@ public class HeuristicRoutingPolicy extends RoutingPolicyBase {
     	OpRouter qR = generateRoutingPolicy(query);
     	if(query.isConstructType()) {
     		///TODO
-    		ContinuousConstruct rootRouter = (ContinuousConstruct)addRouter(qR,
-    				new ContinuousConstruct(context, query, qR));
+    		ContinuousConstruct rootRouter = (ContinuousConstruct)addRouter(qR, 
+    				new ContinuousConstruct(context, query, qR)); 
      		return rootRouter;
      	}
     	return null;
@@ -315,7 +314,7 @@ public class HeuristicRoutingPolicy extends RoutingPolicyBase {
     }
     
     private void addStreamOp(ArrayList<OpStream> streamOps,
-                             ElementGroup group, Node graphNode, Window window) {
+			ElementGroup group, Node graphNode,Window window) {
 		for(Element el:group.getElements()) {
 			if(el instanceof ElementTriplesBlock) {
 				addStreamOp(streamOps, (ElementTriplesBlock)el, graphNode, window);
@@ -337,7 +336,7 @@ public class HeuristicRoutingPolicy extends RoutingPolicyBase {
 	}
 
 	private void addStreamOp(ArrayList<OpStream> streamOps,
-                             ElementTriplesBlock el, Node graphNode, Window window) {
+			ElementTriplesBlock el, Node graphNode,Window window) {
 		for(Triple t:el.getPattern().getList()) {
 			streamOps.add(new OpStream(graphNode,t,window));
 		}

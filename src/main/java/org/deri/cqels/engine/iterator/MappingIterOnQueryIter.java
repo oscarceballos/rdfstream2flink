@@ -1,9 +1,10 @@
 package org.deri.cqels.engine.iterator;
 
-import com.hp.hpl.jena.sparql.engine.QueryIterator;
 import org.deri.cqels.data.Binding2Mapping;
 import org.deri.cqels.data.Mapping;
 import org.deri.cqels.engine.ExecContext;
+
+import com.hp.hpl.jena.sparql.engine.QueryIterator;
 
 public class MappingIterOnQueryIter extends MappingIter {
 	QueryIterator queryItr;

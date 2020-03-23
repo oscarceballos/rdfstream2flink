@@ -2,6 +2,9 @@ package org.deri.cqels.engine;
 
 import java.util.Timer;
 
+import org.deri.cqels.lang.cqels.Duration;
+import org.deri.cqels.lang.cqels.DurationSet;
+
 import com.sleepycat.bind.tuple.LongBinding;
 import com.sleepycat.je.Cursor;
 import com.sleepycat.je.CursorConfig;
@@ -9,10 +12,7 @@ import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseEntry;
 import com.sleepycat.je.LockMode;
 import com.sleepycat.je.OperationStatus;
-import org.deri.cqels.lang.cqels.Duration;
-import org.deri.cqels.lang.cqels.DurationSet;
-
-/**
+/** 
  * This class implements the time-based window 
  * @author		Danh Le Phuoc
  * @author 		Chan Le Van

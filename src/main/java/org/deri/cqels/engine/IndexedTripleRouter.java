@@ -2,17 +2,17 @@ package org.deri.cqels.engine;
 
 import java.util.HashMap;
 
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.sparql.algebra.op.OpTriple;
-import com.hp.hpl.jena.sparql.core.Quad;
-import com.hp.hpl.jena.sparql.core.Var;
 import org.deri.cqels.data.EnQuad;
 import org.deri.cqels.data.HashMapping;
 import org.deri.cqels.data.Mapping;
 import org.deri.cqels.engine.iterator.MappingIterator;
 import org.deri.cqels.lang.cqels.OpStream;
 
-/**
+import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.sparql.algebra.op.OpTriple;
+import com.hp.hpl.jena.sparql.core.Quad;
+import com.hp.hpl.jena.sparql.core.Var;
+/** 
  * This class implements router that it data buffer is a window
  * 
  * @author		Danh Le Phuoc
@@ -56,7 +56,7 @@ public class IndexedTripleRouter extends OpRouterBase {
 	 * This method acts as a listener to catch data from Esper engine
 	 * @param enQuad the quad coming in
 	 */
-	public void update(EnQuad enQuad) {
+	public void update(EnQuad enQuad) {		
 		//Add to indexed buff
 		w.purge();
 		buff.add(enQuad);
@@ -76,11 +76,11 @@ public class IndexedTripleRouter extends OpRouterBase {
 			hMap.put((Var)quad.getObject(), enQuad.getOID());
 		}
 		//System.out.println("received");
-        _route(new HashMapping(context, hMap));
+        _route(new HashMapping(context, hMap));       
 	}
 		
 	@Override
-	public MappingIterator searchBuff4Match(Mapping mapping) {
+	public MappingIterator searchBuff4Match(Mapping mapping) { 
 		//buff.purge(window);
 		return  buff.search4MatchMapping(mapping);
 	}

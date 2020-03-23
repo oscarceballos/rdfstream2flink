@@ -4,16 +4,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.deri.cqels.engine.ExecContext;
 import org.openjena.atlas.iterator.IteratorConcat;
 
 import com.hp.hpl.jena.sparql.core.Var;
-import org.deri.cqels.engine.ExecContext;
 
 public class HashMapping extends MappingBase {
 	
 	HashMap<Var, Long> hMap;
 
-	public HashMapping(ExecContext context, HashMap<Var, Long> hMap) {
+	public HashMapping(ExecContext context,HashMap<Var, Long> hMap) {
 		super(context);
 		this.hMap = hMap;
 	}

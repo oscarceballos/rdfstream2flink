@@ -3,10 +3,11 @@ package org.deri.cqels.data;
 
 import java.util.Iterator;
 
+import org.deri.cqels.engine.ExecContext;
+
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.sparql.core.Var;
 import com.hp.hpl.jena.sparql.engine.binding.Binding;
-import org.deri.cqels.engine.ExecContext;
 
 public class Mapping2Binding implements Binding {
 	Mapping mapping;

@@ -5,6 +5,16 @@
  * All rights reserved.
  */
 package org.deri.cqels.lang.cqels;
+import org.deri.cqels.engine.*;
+import com.hp.hpl.jena.graph.* ;
+import com.hp.hpl.jena.query.* ;
+import com.hp.hpl.jena.sparql.core.Var ;
+import com.hp.hpl.jena.sparql.syntax.* ;
+import com.hp.hpl.jena.sparql.expr.* ;
+import com.hp.hpl.jena.sparql.path.* ;
+import com.hp.hpl.jena.sparql.expr.aggregate.* ;
+import com.hp.hpl.jena.update.* ;
+import com.hp.hpl.jena.sparql.modify.request.* ;
 
 /** Token Manager. */
 public class CQELSParserTokenManager implements CQELSParserConstants
@@ -3725,7 +3735,7 @@ int jjmatchedPos;
 int jjmatchedKind;
 
 /** Get the next Token. */
-public Token getNextToken()
+public Token getNextToken() 
 {
   Token specialToken = null;
   Token matchedToken;

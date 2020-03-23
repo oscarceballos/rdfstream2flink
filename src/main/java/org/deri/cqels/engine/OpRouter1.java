@@ -1,8 +1,7 @@
 package org.deri.cqels.engine;
 
 import com.hp.hpl.jena.sparql.algebra.Op;
-
-/**
+/** 
  * This abstract class has characteristic of a unary router 
  * 
  * @author		Danh Le Phuoc
@@ -23,7 +22,7 @@ public abstract class OpRouter1 extends OpRouterBase {
 		this.subRouter = subRouter;
 	}
 	
-	public OpRouter sub() {
+	public OpRouter sub() { 
 		return subRouter;
 	}
 }

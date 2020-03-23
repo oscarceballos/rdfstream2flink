@@ -2,9 +2,10 @@ package org.deri.cqels.engine;
 
 import java.util.HashMap;
 
-import com.hp.hpl.jena.query.Query;
+import org.deri.cqels.data.Mapping;
 
-/**
+import com.hp.hpl.jena.query.Query;
+/** 
  * This class is the base class to build an execution plan
  * 
  * @author		Danh Le Phuoc
@@ -15,7 +16,7 @@ import com.hp.hpl.jena.query.Query;
  */
 public abstract class RoutingPolicyBase implements RoutingPolicy {
     protected ExecContext context;
-    protected HashMap<Integer, OpRouter> next;
+    protected HashMap<Integer,OpRouter> next;
     protected LogicCompiler compiler;
     public RoutingPolicyBase(ExecContext ctx) {
     	context = ctx;

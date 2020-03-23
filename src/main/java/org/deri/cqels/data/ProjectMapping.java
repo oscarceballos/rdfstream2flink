@@ -3,8 +3,9 @@ package org.deri.cqels.data;
 import java.util.Iterator;
 import java.util.List;
 
-import com.hp.hpl.jena.sparql.core.Var;
 import org.deri.cqels.engine.ExecContext;
+
+import com.hp.hpl.jena.sparql.core.Var;
 
 public class ProjectMapping extends MappingBase {
 	Mapping mapping;

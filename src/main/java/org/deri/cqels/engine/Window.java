@@ -2,7 +2,7 @@ package org.deri.cqels.engine;
 
 import com.sleepycat.je.Database;
 /** 
- * This interface represents the abstract behaviors of a org.deri.cqels window
+ * This interface represents the abstract behaviors of a cqels window 
  * @author		Danh Le Phuoc
  * @author 		Chan Le Van
  * @organization DERI Galway, NUIG, Ireland  www.deri.ie

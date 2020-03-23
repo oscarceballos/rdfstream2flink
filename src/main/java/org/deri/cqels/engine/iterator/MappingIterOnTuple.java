@@ -3,14 +3,14 @@ package org.deri.cqels.engine.iterator;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.openjena.atlas.lib.Tuple;
-
-import com.hp.hpl.jena.sparql.core.Var;
-import com.hp.hpl.jena.tdb.store.NodeId;
 import org.deri.cqels.data.Mapping;
 import org.deri.cqels.data.MappingWrapped;
 import org.deri.cqels.data.TupleMapping;
 import org.deri.cqels.engine.ExecContext;
+import org.openjena.atlas.lib.Tuple;
+
+import com.hp.hpl.jena.sparql.core.Var;
+import com.hp.hpl.jena.tdb.store.NodeId;
 
 public class MappingIterOnTuple extends MappingIter {
 	
@@ -18,7 +18,7 @@ public class MappingIterOnTuple extends MappingIter {
 	HashMap<Var,Integer> var2Idx;
 	Mapping mapping;
 	public MappingIterOnTuple(ExecContext context, Iterator<Tuple<NodeId>> tupleItr,
-							  HashMap<Var,Integer> var2Idx, Mapping mapping) {
+				HashMap<Var,Integer> var2Idx, Mapping mapping) {
 		super(context);
 		this.tupleItr = tupleItr;
 		this.var2Idx = var2Idx;

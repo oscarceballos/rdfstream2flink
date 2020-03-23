@@ -1,9 +1,9 @@
 package org.deri.cqels.engine;
 
-import com.hp.hpl.jena.sparql.algebra.Op;
 import org.deri.cqels.data.Mapping;
 import org.deri.cqels.engine.iterator.MappingIterator;
 
+import com.hp.hpl.jena.sparql.algebra.Op;
 /**
  *This interface contains the behaviours of a router which is responsible to receive a mapping and route it
  *to the higher node in the router-node tree 
@@ -35,7 +35,7 @@ public interface OpRouter {
 	 * This method route the specified mapping to higher node in the router-node tree
 	 * @param mapping the specified mapping
 	 */
-	public void route(Mapping mapping);
+	public void route (Mapping mapping);
 	/**
 	 * Each specific router has a unique Id
 	 * This method will get that Id out

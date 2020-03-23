@@ -1,12 +1,14 @@
 package org.deri.cqels.engine;
 
+import java.lang.reflect.Method;
 
-import com.hp.hpl.jena.sparql.algebra.op.OpJoin;
 import org.deri.cqels.data.Mapping;
 import org.deri.cqels.engine.iterator.MappingIterMatch;
 import org.deri.cqels.engine.iterator.MappingIterator;
 import org.deri.cqels.engine.iterator.MappingNestedLoopEqJoin;
 
+
+import com.hp.hpl.jena.sparql.algebra.op.OpJoin;
 /**
  * This class implements a binary router processing the join operator
  * @author		Danh Le Phuoc
@@ -19,7 +21,7 @@ import org.deri.cqels.engine.iterator.MappingNestedLoopEqJoin;
 public class JoinRouter extends OpRouter2 {
 	
 	
-	public JoinRouter(ExecContext context, OpJoin op, OpRouter left, OpRouter right) {
+	public JoinRouter(ExecContext context, OpJoin op,OpRouter left, OpRouter right) {
 		super(context, op, left, right);
 	}
 	
@@ -57,7 +59,7 @@ public class JoinRouter extends OpRouter2 {
 	
 	@Override
 	public MappingIterator searchBuff4Match(Mapping mapping) { 
-		return new MappingIterMatch(context,getBuff(),mapping);
+		return new  MappingIterMatch(context,getBuff(),mapping);
 	}
 
 	public void visit(RouterVisitor rv) {

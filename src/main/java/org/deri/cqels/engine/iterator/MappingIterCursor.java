@@ -1,9 +1,10 @@
 package org.deri.cqels.engine.iterator;
 
+import org.deri.cqels.engine.ExecContext;
+
 import com.sleepycat.je.Cursor;
 import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseEntry;
-import org.deri.cqels.engine.ExecContext;
 
 public abstract class MappingIterCursor extends MappingIter {
 	

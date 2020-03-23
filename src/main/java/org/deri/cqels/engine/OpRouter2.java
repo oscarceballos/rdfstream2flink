@@ -1,8 +1,7 @@
 package org.deri.cqels.engine;
 
 import com.hp.hpl.jena.sparql.algebra.Op;
-
-/**
+/** 
  * This abstract class has characteristic of a binary router 
  * @author		Danh Le Phuoc
  * @author 		Chan Le Van
@@ -18,7 +17,7 @@ public abstract class OpRouter2 extends OpRouterBase {
 		this.right = right;
 	}
 	
-	public OpRouter left() {
+	public OpRouter left() { 
 		return left;
 	}
 	

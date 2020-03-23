@@ -13,12 +13,14 @@ package org.deri.cqels.lang.cqels;
  */
 
 public
-class JavaCharStream {
+class JavaCharStream
+{
   /** Whether parser is static. */
   public static final boolean staticFlag = false;
 
   static final int hexval(char c) throws java.io.IOException {
-    switch(c) {
+    switch(c)
+    {
        case '0' :
           return 0;
        case '1' :

@@ -1,7 +1,8 @@
 package org.deri.cqels.data;
 
-import com.hp.hpl.jena.sparql.core.Var;
 import org.deri.cqels.engine.ExecContext;
+
+import com.hp.hpl.jena.sparql.core.Var;
 
 public class Mapping1 extends MappingBase {
 	

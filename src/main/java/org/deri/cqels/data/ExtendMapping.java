@@ -2,17 +2,17 @@ package org.deri.cqels.data;
 
 import java.util.Iterator;
 
+import org.deri.cqels.engine.ExecContext;
 import org.openjena.atlas.iterator.IteratorConcat;
 
 import com.hp.hpl.jena.sparql.core.Var;
 import com.hp.hpl.jena.sparql.core.VarExprList;
 import com.hp.hpl.jena.sparql.expr.ExprVar;
-import org.deri.cqels.engine.ExecContext;
 
 public class ExtendMapping extends MappingBase {
 	Mapping mapping;
 	VarExprList exprs;
-	public ExtendMapping(ExecContext context, Mapping mapping, VarExprList exprs) {
+	public ExtendMapping(ExecContext context,Mapping mapping,VarExprList exprs) {
 		super(context);
 		this.mapping=mapping;
 		this.exprs=exprs;

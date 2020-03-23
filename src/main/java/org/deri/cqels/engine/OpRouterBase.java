@@ -1,9 +1,9 @@
 package org.deri.cqels.engine;
 
-import com.hp.hpl.jena.sparql.algebra.Op;
 import org.deri.cqels.data.Mapping;
 import org.deri.cqels.engine.iterator.MappingIterator;
 
+import com.hp.hpl.jena.sparql.algebra.Op;
 /**
  *This class implements the basic behaviors of a router
  * @author		Danh Le Phuoc
@@ -11,7 +11,7 @@ import org.deri.cqels.engine.iterator.MappingIterator;
  * @organization DERI Galway, NUIG, Ireland  www.deri.ie
  * @email 	danh.lephuoc@deri.org
  * @email   chan.levan@deri.org
- * @see org.deri.cqels.engine.OpRouter
+ * @see OpRouter
  */
 
 public abstract class OpRouterBase implements OpRouter {

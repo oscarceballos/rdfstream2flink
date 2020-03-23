@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.sparql.syntax.Template;
 import org.deri.cqels.data.Mapping;
 
+import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.graph.Triple;
+import com.hp.hpl.jena.graph.TripleIterator;
+import com.hp.hpl.jena.sparql.core.BasicPattern;
+import com.hp.hpl.jena.sparql.syntax.Template;
 /**
  * This class processes the mapping result for the CONSTRUCT-type query form
  * @author		Danh Le Phuoc
@@ -23,7 +25,7 @@ public abstract class ConstructListener implements ContinuousListener {
 	Template template;
 	ExecContext context;
 	public static int count = 0;
-	public ConstructListener(ExecContext context, String streamURI) {
+	public ConstructListener(ExecContext context, String streamURI) { 
 		this.uri = streamURI;
 		this.context = context;
 	}

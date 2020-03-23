@@ -2,6 +2,15 @@ package org.deri.cqels.engine;
 
 import java.util.ArrayList;
 
+import org.deri.cqels.data.EnQuad;
+import org.deri.cqels.data.Mapping;
+import org.deri.cqels.engine.iterator.MappingIterCursorAll;
+import org.deri.cqels.engine.iterator.MappingIterCursorByKey;
+import org.deri.cqels.engine.iterator.MappingIterCursorByRangeKey;
+import org.deri.cqels.engine.iterator.MappingIterator;
+import org.deri.cqels.engine.iterator.NullMappingIter;
+import org.deri.cqels.util.Utils;
+
 import com.hp.hpl.jena.sparql.algebra.Op;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.sparql.core.Var;
@@ -14,15 +23,7 @@ import com.sleepycat.je.DatabaseEntry;
 import com.sleepycat.je.SecondaryConfig;
 import com.sleepycat.je.SecondaryDatabase;
 import com.sleepycat.je.SecondaryKeyCreator;
-import org.deri.cqels.data.EnQuad;
-import org.deri.cqels.data.Mapping;
-import org.deri.cqels.engine.iterator.MappingIterCursorAll;
-import org.deri.cqels.engine.iterator.MappingIterCursorByRangeKey;
-import org.deri.cqels.engine.iterator.MappingIterator;
-import org.deri.cqels.engine.iterator.NullMappingIter;
-import org.deri.cqels.util.Utils;
-
-/**
+/** 
  * @author		Danh Le Phuoc
  * @organization DERI Galway, NUIG, Ireland  www.deri.ie
  * @email 	danh.lephuoc@deri.org
@@ -37,7 +38,7 @@ public class IndexedOnWindowBuff {
 	ArrayList<ArrayList<Integer>> indexes;
 	SecondaryDatabase[] idxDbs; 
 	Window w;
-	public IndexedOnWindowBuff(ExecContext context, Quad quad, OpRouter router, Window w){
+	public IndexedOnWindowBuff(ExecContext  context,Quad quad, OpRouter router, Window w){
 		this.context = context;
 		this.quad = quad;
 		this.router = router;
@@ -149,7 +150,7 @@ public class IndexedOnWindowBuff {
 					out.writeLong(0);
 				}
 				//System.out.println("return MappingIterCursorByRangeKey");
-				return new MappingIterCursorByRangeKey(context, idxDbs[idx],
+				return new MappingIterCursorByRangeKey(context, idxDbs[idx], 
 													   new DatabaseEntry(out.getBufferBytes()), 
 													   mapping, vars, weight);
 			}
@@ -161,9 +162,9 @@ public class IndexedOnWindowBuff {
 					//System.out.println(idxMask.get(i)+" "+vars.get(idxMask.get(i))+"="+mapping.get(vars.get(idxMask.get(i))));
 				}
 				//System.out.println("return MappingIterCursorByKey");
-				return new MappingIterCursorByRangeKey(context, idxDbs[idx],
+				return new MappingIterCursorByKey(context, idxDbs[idx], 
 												  new DatabaseEntry(out.getBufferBytes()), 
-												  					mapping, vars, idx);
+												  					mapping, vars);
 			}
 		}
 		return NullMappingIter.instance();

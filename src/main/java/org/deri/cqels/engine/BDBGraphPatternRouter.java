@@ -4,6 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.deri.cqels.data.Mapping;
+import org.deri.cqels.engine.iterator.MappingIterCursorAll;
+import org.deri.cqels.engine.iterator.MappingIterCursorByKey;
+import org.deri.cqels.engine.iterator.MappingIterCursorByRangeKey;
+import org.deri.cqels.engine.iterator.MappingIterator;
+import org.deri.cqels.engine.iterator.NullMappingIter;
+
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.sparql.algebra.Op;
 import com.hp.hpl.jena.sparql.core.DatasetGraph;
 import com.hp.hpl.jena.sparql.core.Var;
@@ -18,12 +26,6 @@ import com.sleepycat.je.DatabaseEntry;
 import com.sleepycat.je.SecondaryConfig;
 import com.sleepycat.je.SecondaryDatabase;
 import com.sleepycat.je.SecondaryKeyCreator;
-import org.deri.cqels.data.Mapping;
-import org.deri.cqels.engine.iterator.MappingIterCursorAll;
-import org.deri.cqels.engine.iterator.MappingIterCursorByRangeKey;
-import org.deri.cqels.engine.iterator.MappingIterator;
-import org.deri.cqels.engine.iterator.NullMappingIter;
-
 /**
  * This class implements a router that its data mapping buffer is static
  * @author		Danh Le Phuoc
@@ -31,17 +33,17 @@ import org.deri.cqels.engine.iterator.NullMappingIter;
  * @organization DERI Galway, NUIG, Ireland  www.deri.ie
  * @email 	danh.lephuoc@deri.org
  * @email   chan.levan@deri.org
- * @see org.deri.cqels.engine.OpRouterBase
+ * @see OpRouterBase
  */
 public class BDBGraphPatternRouter extends OpRouterBase {
 	ArrayList<String> idxDescs;
 	HashMap<Var,Integer> var2Idx;
 	ArrayList<Var> vars;
 	ArrayList<ArrayList<Integer>> indexes;
-	Database[] idxDbs;
+	Database[] idxDbs; 
 	static final DatabaseEntry EMPTYDATA = new DatabaseEntry(new byte[0]);
 	Database mainDB;
-
+	
 	/**
 	 *The constructor
 	 *@param context
@@ -135,7 +137,7 @@ public class BDBGraphPatternRouter extends OpRouterBase {
 	 *@return the data buffer of dataset
 	 */
 	@Override
-	public MappingIterator getBuff() {
+	public MappingIterator getBuff() { 
 		return new MappingIterCursorAll(context, mainDB, vars);
 	}
 	
@@ -183,7 +185,7 @@ public class BDBGraphPatternRouter extends OpRouterBase {
 					out.writeLong(0);
 				}
 				//System.out.println("return MappingIterCursorByRangeKey");
-				return new MappingIterCursorByRangeKey(context, idxDbs[idx],
+				return new MappingIterCursorByRangeKey(context, idxDbs[idx], 
 									new DatabaseEntry(out.getBufferBytes()), 
 													  mapping, vars, weight);
 			}
@@ -192,9 +194,9 @@ public class BDBGraphPatternRouter extends OpRouterBase {
 				for(int i = 0; i < idxMask.size(); i++) {
 					out.writeLong(mapping.get(vars.get(idxMask.get(i))));
 				}
-				return new MappingIterCursorByRangeKey(context, idxDbs[idx],
+				return new MappingIterCursorByKey(context, idxDbs[idx], 
 							   new DatabaseEntry(out.getBufferBytes()), 
-												 mapping, vars, idx);
+												 mapping, vars);
 			}
 		}
 		return NullMappingIter.instance();

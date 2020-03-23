@@ -2,15 +2,15 @@ package org.deri.cqels.engine.iterator;
 
 import java.util.ArrayList;
 
+import org.deri.cqels.data.Mapping;
+import org.deri.cqels.engine.ExecContext;
+
 import com.hp.hpl.jena.sparql.core.Var;
 import com.sleepycat.je.CursorConfig;
 import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseEntry;
 import com.sleepycat.je.LockMode;
 import com.sleepycat.je.OperationStatus;
-import org.deri.cqels.data.Mapping;
-import org.deri.cqels.engine.ExecContext;
-import org.deri.cqels.util.Utils;
 
 public class MappingIterCursorAll extends MappingIterCursor {
 	ArrayList<Var> vars;
@@ -37,7 +37,7 @@ public class MappingIterCursorAll extends MappingIterCursor {
 	protected Mapping moveToNextMapping() {
 		Mapping mapping = null;
 		if(curEnt != null) {
-			mapping = Utils.data2Mapping(context, curEnt, vars);
+			mapping = org.deri.cqels.util.Utils.data2Mapping(context, curEnt, vars);
 			_readNext();
 		}
 		return mapping;

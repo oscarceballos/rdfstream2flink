@@ -2,11 +2,13 @@ package org.deri.cqels.engine.iterator;
 
 import java.util.Iterator;
 
+import org.deri.cqels.data.Mapping;
 import org.openjena.atlas.lib.Closeable;
 
-import org.deri.cqels.data.Mapping;
+import com.hp.hpl.jena.sparql.util.PrintSerializable;
 
-public interface MappingIterator extends Closeable, Iterator<Mapping> {
+public interface MappingIterator extends Closeable, Iterator<Mapping>
+{
     /** 
      *Get next binding 
      */ 

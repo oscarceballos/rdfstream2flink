@@ -3,9 +3,11 @@ package org.deri.cqels.data;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.hp.hpl.jena.sparql.core.Var;
 import org.deri.cqels.engine.ExecContext;
 import org.deri.cqels.engine.OpRouter;
+
+import com.hp.hpl.jena.sparql.algebra.Op;
+import com.hp.hpl.jena.sparql.core.Var;
 
 public interface Mapping extends Map<Var, Long>{
 	

@@ -7,6 +7,9 @@ import org.deri.cqels.data.Mapping;
 import org.deri.cqels.data.MappingWrapped;
 import org.deri.cqels.engine.iterator.MappingIterator;
 
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.sparql.algebra.Op;
+
 public class ThroughRouter extends OpRouterBase {
 	ArrayList<OpRouter> dataflows;
 	public ThroughRouter(ExecContext context, ArrayList<OpRouter> dataflows) {

@@ -2,10 +2,11 @@ package org.deri.cqels.engine.iterator;
 
 import java.util.NoSuchElementException;
 
-import com.hp.hpl.jena.sparql.ARQInternalErrorException;
-import com.hp.hpl.jena.sparql.util.Utils;
 import org.deri.cqels.data.Mapping;
 import org.deri.cqels.engine.ExecContext;
+
+import com.hp.hpl.jena.sparql.ARQInternalErrorException;
+import com.hp.hpl.jena.sparql.util.Utils;
 
 public abstract class MappingIterProcessBinding extends MappingIter1 {
 	

@@ -1,16 +1,16 @@
 package org.deri.cqels.engine.iterator;
 
-import com.hp.hpl.jena.sparql.ARQInternalErrorException;
 import org.deri.cqels.data.Mapping;
 import org.deri.cqels.engine.ExecContext;
 import org.deri.cqels.engine.OpRouter;
+import com.hp.hpl.jena.sparql.ARQInternalErrorException;
 
 public class MappingNestedLoopEqJoin extends MappingIter {
 	private MappingIterator curItr,leftItr;
 	private Mapping nextMapping;
 	OpRouter leftRouter, rightRouter;
-	public MappingNestedLoopEqJoin(ExecContext context, OpRouter leftRouter,
-								   OpRouter rightRouter) {
+	public MappingNestedLoopEqJoin(ExecContext context, OpRouter leftRouter, 
+				OpRouter rightRouter) {
 		super(context);
 		this.leftRouter = leftRouter;
 		leftItr = leftRouter.getBuff();

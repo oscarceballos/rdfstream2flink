@@ -1,7 +1,6 @@
 package org.deri.cqels.engine;
 
 import org.deri.cqels.data.Mapping;
-
 /**
  * This interface contains behaviors used to process the mapping result 
  * @author		Danh Le Phuoc

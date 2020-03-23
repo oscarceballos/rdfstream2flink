@@ -1,11 +1,14 @@
 package org.deri.cqels.engine;
 
-import com.hp.hpl.jena.sparql.algebra.op.OpExtend;
-import com.hp.hpl.jena.sparql.core.VarExprList;
+import java.lang.reflect.Method;
+
 import org.deri.cqels.data.ExtendMapping;
 import org.deri.cqels.data.Mapping;
 import org.deri.cqels.engine.iterator.MappingIterator;
 import org.deri.cqels.engine.iterator.NullMappingIter;
+
+import com.hp.hpl.jena.sparql.algebra.op.OpExtend;
+import com.hp.hpl.jena.sparql.core.VarExprList;
 
 public class ExtendRouter extends OpRouter1 {
 	VarExprList exprs;

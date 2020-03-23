@@ -3,19 +3,21 @@ package org.deri.cqels.util;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.sparql.core.Quad;
-import com.hp.hpl.jena.sparql.core.Var;
-import com.sleepycat.bind.tuple.TupleInput;
-import com.sleepycat.je.DatabaseEntry;
 import org.deri.cqels.data.HashMapping;
 import org.deri.cqels.data.Mapping;
 import org.deri.cqels.data.MappingWrapped;
 import org.deri.cqels.engine.ExecContext;
 
+import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.sparql.core.Quad;
+import com.hp.hpl.jena.sparql.core.Var;
+import com.hp.hpl.jena.sparql.engine.binding.Binding;
+import com.sleepycat.bind.tuple.TupleInput;
+import com.sleepycat.je.DatabaseEntry;
+
 public class Utils {
 
-	public static void _addBinding(Node node, HashMap<Var, Long> hMap, Mapping mapping, TupleInput input){
+	public static void _addBinding(Node node, HashMap<Var, Long> hMap,Mapping mapping, TupleInput input){
 		if(node.isVariable()&&(!mapping.containsKey((Var)node)))
 			hMap.put((Var)node,input.readLong());
 	}
@@ -30,7 +32,7 @@ public class Utils {
 		return vars;
 	}
 	 
-	public static Mapping data2Mapping(ExecContext context, DatabaseEntry data, Mapping mapping, ArrayList<Var> vars){
+	public static Mapping data2Mapping(ExecContext context,DatabaseEntry data,Mapping mapping,ArrayList<Var> vars){
 		return new MappingWrapped(context, data2MappingFilter(context, data, mapping, vars),mapping );
 	}
 	

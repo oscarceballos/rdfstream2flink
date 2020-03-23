@@ -6,8 +6,7 @@ import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseEntry;
 import com.sleepycat.je.LockMode;
 import com.sleepycat.je.OperationStatus;
-
-/**
+/** 
  * This class implements the triple-based window 
  * @author		Danh Le Phuoc
  * @author 		Chan Le Van

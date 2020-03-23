@@ -2,6 +2,8 @@ package org.deri.cqels.engine;
 
 import java.util.HashMap;
 
+import org.deri.cqels.data.EnQuad;
+
 import com.hp.hpl.jena.sparql.algebra.Op;
 import com.hp.hpl.jena.sparql.algebra.OpVisitorByType;
 import com.hp.hpl.jena.sparql.algebra.op.Op0;
@@ -9,13 +11,12 @@ import com.hp.hpl.jena.sparql.algebra.op.Op1;
 import com.hp.hpl.jena.sparql.algebra.op.Op2;
 import com.hp.hpl.jena.sparql.algebra.op.OpExt;
 import com.hp.hpl.jena.sparql.algebra.op.OpN;
-import org.deri.cqels.data.EnQuad;
 
 public class FixedPlanner {
 	ExecContext context;
 	Op op;
 	HashMap<Op, Integer> plan;
-	public FixedPlanner(ExecContext context, Op op){
+	public FixedPlanner(ExecContext context,Op op){
 		this.context=context;
 		this.op=op;
 		createFixedPlan();

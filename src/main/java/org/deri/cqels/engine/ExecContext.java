@@ -1,7 +1,11 @@
 package org.deri.cqels.engine;
 
 import java.io.File;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Properties;
+
+import org.deri.cqels.lang.cqels.ParserCQELS;
 
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.query.Query;
@@ -23,9 +27,7 @@ import com.hp.hpl.jena.tdb.store.bulkloader.BulkLoader;
 import com.hp.hpl.jena.tdb.sys.SystemTDB;
 import com.sleepycat.je.Environment;
 import com.sleepycat.je.EnvironmentConfig;
-import org.deri.cqels.lang.cqels.ParserCQELS;
-
-/**
+/** 
  * This class implements CQELS execution context
  * 
  * @author		Danh Le Phuoc
@@ -39,8 +41,8 @@ public class ExecContext {
 	RoutingPolicy policy;
 	Properties config;
 	HashMap<String, Object> hashMap;
-	HashMap<Integer, OpRouter> routers;
-	DatasetGraph dataset;
+	HashMap<Integer,OpRouter> routers;
+	DatasetGraphTDB dataset;
 	NodeTable  dictionary;
 	Location location;
 	Environment env;
@@ -52,16 +54,20 @@ public class ExecContext {
 	 */
 	public ExecContext(String path, boolean cleanDataset) {
 		this.hashMap = new HashMap<String, Object>();
+		//combine cache and disk-based dictionary
+//		this.dictionary = new NodeTableNative(IndexBuilder.mem().newIndex(FileSet.mem(), 
+//											  		SystemTDB.nodeRecordFactory), 
+//											  FileFactory.createObjectFileMem(path));
 		this.dictionary = new NodeTableNative(IndexBuilder.mem().newIndex(FileSet.mem(), 
 		  						SystemTDB.nodeRecordFactory), 
-		  						FileFactory.createObjectFileMem("file-"+(new Date()).getTime()));
+		  						FileFactory.createObjectFileMem());		
 		setEngine(new CQELSEngine(this));
 		createCache(path + "/cache");
 		if (cleanDataset) {
 			cleanNCreate(path + "/datasets");
 		}
 		createDataSet(path + "/datasets");
-
+		
 		this.routers = new HashMap<Integer, OpRouter>();
 		this.policy = new HeuristicRoutingPolicy(this);
 	}
@@ -114,7 +120,7 @@ public class ExecContext {
 	 * @param dataUri 
 	 */
 	public void loadDataset(String graphUri, String dataUri) {
-		BulkLoader.loadNamedGraph((DatasetGraphTDB) this.dataset,
+		BulkLoader.loadNamedGraph(this.dataset, 
 					Node.createURI(graphUri),Arrays.asList(dataUri) , false);
 	}
 	
@@ -123,12 +129,16 @@ public class ExecContext {
 	 * @param dataUri 
 	 */
 	public void loadDefaultDataset(String dataUri) {
-		BulkLoader.loadDefaultGraph((DatasetGraphTDB) this.dataset, Arrays.asList(dataUri) , false);
+		BulkLoader.loadDefaultGraph(this.dataset, Arrays.asList(dataUri) , false);
 		
 	}
-
+	
+	/**
+	 * get the dataset
+	 * @param dataUri 
+	 */
 	public DatasetGraphTDB getDataset() { 
-		return (DatasetGraphTDB) dataset;
+		return dataset; 
 	};
 	
 	/**
@@ -193,7 +203,7 @@ public class ExecContext {
 	public void initTDBGraph(String directory) { 
 		//this.dataset = TDBFactory.createDatasetGraph(directory);
 		//this.dataset = ((DatasetGraphTransaction)TDBFactory.createDatasetGraph(location)).getBaseDatasetGraph();
-		this.dataset = (DatasetGraphTDB) TDBFactory.createDatasetGraph(directory);
+		this.dataset = TDBFactory.createDatasetGraph(directory);
 	}
 	
 	/**
@@ -237,7 +247,7 @@ public class ExecContext {
 	 * @param idx 
 	 * @return router   
 	 */
-	public void router(int idx, OpRouter router) {
+	public void router(int idx, OpRouter router) { 
 		this.routers.put(Integer.valueOf(idx), router);
 	}
 	

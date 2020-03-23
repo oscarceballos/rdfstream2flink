@@ -1,6 +1,5 @@
 package org.deri.cqels.engine;
-
-/**
+/** 
  * This class implements the all window - the triple-based window with all of elements valid 
  * @author		Danh Le Phuoc
  * @author 		Chan Le Van

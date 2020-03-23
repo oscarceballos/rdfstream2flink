@@ -2,10 +2,10 @@ package org.deri.cqels.data;
 
 import java.util.Iterator;
 
+import org.deri.cqels.engine.ExecContext;
 import org.openjena.atlas.iterator.IteratorConcat;
 
 import com.hp.hpl.jena.sparql.core.Var;
-import org.deri.cqels.engine.ExecContext;
 
 public class MappingWrapped extends MappingBase {
 	Mapping mapping;

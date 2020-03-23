@@ -1,13 +1,13 @@
 package org.deri.cqels.engine.iterator;
 
+import org.deri.cqels.data.Mapping;
+import org.deri.cqels.data.Mapping2Binding;
+import org.deri.cqels.engine.ExecContext;
 import org.openjena.atlas.io.IndentedWriter;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.sparql.engine.QueryIterator;
 import com.hp.hpl.jena.sparql.engine.binding.Binding;
 import com.hp.hpl.jena.sparql.serializer.SerializationContext;
-import org.deri.cqels.data.Mapping;
-import org.deri.cqels.data.Mapping2Binding;
-import org.deri.cqels.engine.ExecContext;
 
 public class QueryIterOnMappingIter implements QueryIterator{
 	ExecContext context;

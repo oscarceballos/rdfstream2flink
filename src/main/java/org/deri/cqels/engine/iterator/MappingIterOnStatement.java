@@ -1,15 +1,16 @@
 package org.deri.cqels.engine.iterator;
 
+import org.deri.cqels.data.Mapping;
+import org.deri.cqels.engine.ExecContext;
+
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.SafeIterator;
-import org.deri.cqels.data.Mapping;
-import org.deri.cqels.engine.ExecContext;
 
 public class MappingIterOnStatement extends MappingIter {
 	SafeIterator<EventBean> safeItr;
 	EPStatement stmt;
-	public MappingIterOnStatement(ExecContext context, EPStatement stmt) {
+	public MappingIterOnStatement(ExecContext context,EPStatement stmt) {
 		this(context, stmt, false);
 	}
 	

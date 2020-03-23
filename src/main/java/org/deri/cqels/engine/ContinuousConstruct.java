@@ -1,11 +1,12 @@
 package org.deri.cqels.engine;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
-import com.hp.hpl.jena.query.Query;
 import org.deri.cqels.data.Mapping;
 
-/**
+import com.hp.hpl.jena.query.Query;
+/** 
  * This class acts as a router standing in the root of the tree 
  * if the query is a construct-type
  * @author		Danh Le Phuoc
@@ -13,7 +14,7 @@ import org.deri.cqels.data.Mapping;
  * @organization DERI Galway, NUIG, Ireland  www.deri.ie
  * @email 	danh.lephuoc@deri.org
  * @email   chan.levan@deri.org
- * @see org.deri.cqels.engine.OpRouter
+ * @see OpRouter
  * @see OpRouterBase
  */
 public class ContinuousConstruct extends OpRouter1 {
@@ -32,7 +33,7 @@ public class ContinuousConstruct extends OpRouter1 {
 			lit.update(mapping);
 	}
 	
-	public void register(ConstructListener lit) {
+	public void register(ConstructListener lit) { 
 		lit.setTemplate(query.getConstructTemplate());
 		listeners.add(lit); 
 	}

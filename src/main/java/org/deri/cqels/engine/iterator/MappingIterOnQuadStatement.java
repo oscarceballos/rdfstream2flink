@@ -1,19 +1,20 @@
 package org.deri.cqels.engine.iterator;
 
-import com.espertech.esper.client.EPStatement;
-import com.espertech.esper.client.EventBean;
-import com.espertech.esper.client.SafeIterator;
-import com.hp.hpl.jena.sparql.core.Quad;
 import org.deri.cqels.data.EnQuad;
 import org.deri.cqels.data.Mapping;
 import org.deri.cqels.data.MappingQuad;
 import org.deri.cqels.engine.ExecContext;
 
+import com.espertech.esper.client.EPStatement;
+import com.espertech.esper.client.EventBean;
+import com.espertech.esper.client.SafeIterator;
+import com.hp.hpl.jena.sparql.core.Quad;
+
 public class MappingIterOnQuadStatement extends MappingIter {
 	SafeIterator<EventBean> safeItr;
 	EPStatement stmt;
 	Quad quad;
-	public MappingIterOnQuadStatement(ExecContext context, EPStatement stmt, Quad quad) {
+	public MappingIterOnQuadStatement(ExecContext context,EPStatement stmt,Quad quad) {
 		this(context, stmt, quad, false);
 	}
 	

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.deri.cqels.lang.cqels.ElementStreamGraph;
+import org.deri.cqels.lang.cqels.OpStream;
 import org.openjena.atlas.logging.Log;
 
 import com.hp.hpl.jena.graph.Node;
@@ -113,7 +115,7 @@ public class LogicCompiler {
         // ---- GROUP BY
         if ( query.hasGroupBy() ) {
             // When there is no GroupBy but there are some aggregates, it's a group of no variables.
-            root = policy.addRouter(root, new GroupRouter(policy.getContext(),
+            root = policy.addRouter(root, new GroupRouter(policy.getContext(), 
             		new OpGroup(root.getOp(), query.getGroupBy(), query.getAggregators()), root));
         }
 

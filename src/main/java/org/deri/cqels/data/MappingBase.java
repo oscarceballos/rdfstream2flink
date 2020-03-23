@@ -6,10 +6,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.hp.hpl.jena.sparql.core.Var;
-import com.hp.hpl.jena.util.iterator.NullIterator;
 import org.deri.cqels.engine.ExecContext;
 import org.deri.cqels.engine.OpRouter;
+
+import com.hp.hpl.jena.sparql.core.Var;
+import com.hp.hpl.jena.util.iterator.NullIterator;
 
 public  abstract class MappingBase implements Mapping {
 	static int  count = 0;
@@ -77,7 +78,7 @@ public  abstract class MappingBase implements Mapping {
 		return NullIterator.instance();
 	}
 	
-	public Set<Entry<Var, Long>> entrySet() {
+	public Set<java.util.Map.Entry<Var, Long>> entrySet() {
 		// TODO Auto-generated method stub
 		return null;
 	}

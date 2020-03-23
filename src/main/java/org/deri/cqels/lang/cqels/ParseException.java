@@ -91,8 +91,8 @@ public class ParseException extends Exception {
    * gets displayed.
    */
   private static String initialise(Token currentToken,
-                                   int[][] expectedTokenSequences,
-                                   String[] tokenImage) {
+                           int[][] expectedTokenSequences,
+                           String[] tokenImage) {
     String eol = System.getProperty("line.separator", "\n");
     StringBuffer expected = new StringBuffer();
     int maxSize = 0;
