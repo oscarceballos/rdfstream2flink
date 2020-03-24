@@ -107,7 +107,24 @@ under the License.
 			<version>0.8.10</version>
 		</dependency>
 
-	</dependencies>
+		<!-- Add logging framework, to produce console output when running in the IDE. -->
+        <dependency>
+            <groupId>com.espertech</groupId>
+            <artifactId>esperio-stax</artifactId>
+            <version>4.2.0</version>
+        </dependency>
+        <dependency>
+            <artifactId>je</artifactId>
+            <groupId>com.sleepycat</groupId>
+            <version>5.0.73</version>
+        </dependency>
+		<dependency>
+			<groupId>xml-apis</groupId>
+			<artifactId>xml-apis</artifactId>
+			<version>1.4.01</version>
+		</dependency>
+
+    </dependencies>
 
 	<build>
 		<plugins>
