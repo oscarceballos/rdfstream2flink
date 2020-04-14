@@ -1,0 +1,16 @@
+select ?obId1 ?obId2 ?v1 ?v2
+  
+where {
+
+stream <http://www.insight-centre.org/dataset/SampleEventService#AarhusTrafficData182955> [range 3s] 
+{?obId1 a ?ob.
+?obId1 <http://purl.oclc.org/NET/ssnx/ssn#observedProperty> <http://www.insight-centre.org/citytraffic#CongestionLevel>.
+?obId1 <http://purl.oclc.org/NET/sao/hasValue> ?v1.
+?obId1 <http://purl.oclc.org/NET/ssnx/ssn#observedBy> <http://www.insight-centre.org/dataset/SampleEventService#AarhusTrafficData182955>.
+}
+stream <http://www.insight-centre.org/dataset/SampleEventService#AarhusTrafficData158505> [range 3s]
+{?obId2 a ?ob.
+?obId2 <http://purl.oclc.org/NET/ssnx/ssn#observedProperty> <http://www.insight-centre.org/citytraffic#CongestionLevel>.
+?obId2 <http://purl.oclc.org/NET/sao/hasValue> ?v2.
+?obId2 <http://purl.oclc.org/NET/ssnx/ssn#observedBy> <http://www.insight-centre.org/dataset/SampleEventService#AarhusTrafficData158505>.
+}}

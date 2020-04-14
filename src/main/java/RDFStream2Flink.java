@@ -17,6 +17,7 @@ public class RDFStream2Flink {
 
         HashMap<String, String> parameters = new HashMap<>();
         Logger logger = LoggerFactory.getLogger(RDFStream2Flink.class);
+        System.out.println("|"+args[0]+"|");
 
         for (String s : args) {
             parameters.put(s.split("=")[0].trim(), s.split("=")[1].trim());

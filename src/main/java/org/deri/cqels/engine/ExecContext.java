@@ -62,11 +62,11 @@ public class ExecContext {
 		  						SystemTDB.nodeRecordFactory), 
 		  						FileFactory.createObjectFileMem());		
 		setEngine(new CQELSEngine(this));
-		createCache(path + "/cache");
+		/*createCache(path + "/cache");
 		if (cleanDataset) {
 			cleanNCreate(path + "/datasets");
 		}
-		createDataSet(path + "/datasets");
+		createDataSet(path + "/datasets");*/
 		
 		this.routers = new HashMap<Integer, OpRouter>();
 		this.policy = new HeuristicRoutingPolicy(this);
@@ -78,7 +78,7 @@ public class ExecContext {
 			System.out.println("can not create working directory"+path);
 		}
 	}
-	
+
 	/**
 	 * to delete a directory
 	 * @param dir directory will be deleted

@@ -54,7 +54,7 @@ public class IndexedOnWindowBuff {
 		dbConfig.setAllowCreate(true);
 		dbConfig.setTemporary(true);
 	    //dbConfig.setTransactional(true);
-		buff = context.env().openDatabase(null, "pri_synopsis_" + router.getId(), dbConfig);
+		//buff = context.env().openDatabase(null, "pri_synopsis_" + router.getId(), dbConfig);
 		//System.out.println("ttrans "+dbConfig.getTransactional());
 		initIndexes();
 	}
@@ -77,7 +77,7 @@ public class IndexedOnWindowBuff {
 			}
 		}
 		idxDbs = new SecondaryDatabase[indexes.size()];
-		for( int i = 0; i < indexes.size(); i++) {
+		/*for( int i = 0; i < indexes.size(); i++) {
 			SecondaryConfig idxConfig = new SecondaryConfig();
 			idxConfig.setAllowCreate(true);
 			idxConfig.setTemporary(true);
@@ -87,7 +87,7 @@ public class IndexedOnWindowBuff {
 			
 			idxDbs[i] = context.env().openSecondaryDatabase(null, "idx_synopsis_"+router.getId()+ "-" + i, buff, idxConfig);
 			
-		}
+		}*/
 	}
 	
 	public void add(EnQuad enQuad) {

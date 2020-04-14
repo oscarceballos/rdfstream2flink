@@ -24,9 +24,7 @@ public class CreateFlinkProgram {
 
     public void createFlinkProgram() {
         byte data[] = this.flinkProgram.getBytes();
-        Path path = Paths.get("./src/main/java/rdfstream2flink/out/" + this.fileName + ".java");
-        //Path p = Paths.get("./" + this.fileName + ".java");
-        //Path p = Paths.get("./" + fileName + ".java");
+        Path path = Paths.get("./" + this.fileName + ".java");
         try (OutputStream out = new BufferedOutputStream(Files.newOutputStream(path, CREATE, TRUNCATE_EXISTING))) {
             out.write(data, 0, data.length);
             System.out.println("Java Program File << "+fileName+".java >> created successfully...");
