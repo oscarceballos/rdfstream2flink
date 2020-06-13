@@ -73,5 +73,4 @@ public class LoadRDFStream {
     public static DataStreamSource<TripleTS> fromSocket(StreamExecutionEnvironment environment, String hostname, int port) {
         return fromSocket(environment, hostname, port, '\n');
     }
-
 }

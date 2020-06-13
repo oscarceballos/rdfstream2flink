@@ -68,13 +68,18 @@ public class ConvertLQP2FlinkProgram extends OpVisitorBase {
     public String generateOpStream(OpStream op, Boolean createDS, ArrayList<String> variables) {
         if(createDS) flinkProgram += getRDFStream(op.getGraphNode().toString());
 
+        Triple t = op.getBasicPattern().get(0);
+
         String solW = "\t\tDataStream<SolutionMapping> sm" + SolutionMapping.getIndiceSM() +
                 " = rdfStream" + SolutionMapping.getIndiceDS() + "\n" +
                 ((SolutionMapping.getTypeTime().equals("E")) ?
                         "\t\t\t.assignTimestampsAndWatermarks(new TimestampExtractor())\n":"") +
-                "\t\t\t.keyBy(new WindowKeySelector())\n";
+                "\t\t\t.keyBy(new WindowKeySelector("+
+                        "\""+t.getSubject().toString()+"\", " +
+                        "\""+t.getPredicate().toString()+"\", " +
+                        "\""+evalObject(t.getObject())+"\"))\n";
         if (op.getWindow() instanceof TripleWindow) {
-            Triple t = op.getBasicPattern().get(0);
+            //Triple t = op.getBasicPattern().get(0);
             try {
                 Long triplesNumber = (Long) getField("t", op.getWindow());
                 solW += "\t\t\t.countWindow("+triplesNumber+")\n" +
@@ -88,7 +93,7 @@ public class ConvertLQP2FlinkProgram extends OpVisitorBase {
             }
         }
         else if (op.getWindow() instanceof RangeWindow) {
-            Triple t = op.getBasicPattern().get(0);
+            //Triple t = op.getBasicPattern().get(0);
             RangeWindow w = (RangeWindow) op.getWindow();
             solW += getRangeWindow(w) +
                     "\t\t\t.apply(new Triple2SolutionMapping3(" +

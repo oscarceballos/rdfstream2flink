@@ -21,6 +21,7 @@ public class JoinKeySelector implements KeySelector<SolutionMapping, String> {
                 value += ",";
             }
         }
+        //System.out.println("JoinKeySelector="+value);
         return value;
     }
 }

@@ -6,6 +6,7 @@ import org.apache.jena.graph.Triple;
 import java.sql.Timestamp;
 
 public class TripleTS extends Triple {
+
     private Long timeStamp;
 
     public TripleTS(Node s, Node p, Node o, Long timeStamp) {
