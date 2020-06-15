@@ -141,9 +141,10 @@ public class ConvertLQP2FlinkProgram extends OpVisitorBase {
                 flinkProgram += "\t\tDataStream<SolutionMapping> sm" + indice_sm_join + " = sm" + indice_sm_left + ".join(sm" + indice_sm_right + ")\n" +
                         "\t\t\t.where(new JoinKeySelector(new String[]{"+keys+"}))\n" +
                         "\t\t\t.equalTo(new JoinKeySelector(new String[]{"+keys+"}))\n" +
-                        ((w.getSlide()>0) ?
+                        getRangeWindow(w) +
+                        /*((w.getSlide()>0) ?
                                 ("\t\t\t.window(SlidingProcessingTimeWindows.of(" + getTime(w.getDuration()) +  ", "+getTime(w.getSlide())+"))\n") :
-                                ("\t\t\t.window(TumblingProcessingTimeWindows.of("+ getTime(w.getDuration())+"))\n")) +
+                                ("\t\t\t.window(TumblingProcessingTimeWindows.of("+ getTime(w.getDuration())+"))\n")) +*/
                         "\t\t\t.apply(new Join());\n\n";
             }
         }

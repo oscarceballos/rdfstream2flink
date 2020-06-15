@@ -31,12 +31,10 @@ public class Triple2SolutionMapping3 implements WindowFunction<TripleTS, Solutio
     }
 
     public void apply(String key, TimeWindow w, Iterable<TripleTS> in, Collector<SolutionMapping> out) {
+        int i=0;
         for (TripleTS t : in) {
-            //System.out.println("TripleTS = \nSubject="+t.getSubject()+"\nPredicate="+t.getPredicate()+"\nObject="+t.getObject()+"\nTimeStamp="+t.getTimeStamp());
             if(subject.contains("?") && !predicate.contains("?") && !object.contains("?")) {
                 if(t.getPredicate().getURI().toString().equals(predicate) && evalObject(t.getObject())) {
-                    System.out.println("t.getPredicate()="+t.getPredicate().toString()+"\n\t predicate="+predicate);
-                    System.out.println("t.getObject()="+t.getObject().toString()+"\n\t object="+object);
                     SolutionMapping sm = new SolutionMapping();
                     sm.putMapping(subject, t.getSubject());
                     out.collect(sm);
@@ -49,8 +47,6 @@ public class Triple2SolutionMapping3 implements WindowFunction<TripleTS, Solutio
                 }
             } else if(!subject.contains("?") && !predicate.contains("?") && object.contains("?")) {
                 if(t.getSubject().getURI().toString().equals(subject) && t.getPredicate().getURI().toString().equals(predicate)) {
-                    System.out.println("t.getSubject()="+t.getSubject().toString()+"\n\t subject="+subject);
-                    System.out.println("t.getPredicate()="+t.getPredicate().toString()+"\n\t predicate="+predicate);
                     SolutionMapping sm = new SolutionMapping();
                     sm.putMapping(object, t.getObject());
                     out.collect(sm);
@@ -64,7 +60,6 @@ public class Triple2SolutionMapping3 implements WindowFunction<TripleTS, Solutio
                 }
             } else if(subject.contains("?") && !predicate.contains("?") && object.contains("?")) {
                 if(t.getPredicate().getURI().toString().equals(predicate)) {
-                    System.out.println("t.getPredicate()="+t.getPredicate().toString()+"\n\t predicate="+predicate);
                     SolutionMapping sm = new SolutionMapping();
                     sm.putMapping(subject, t.getSubject());
                     sm.putMapping(object, t.getObject());

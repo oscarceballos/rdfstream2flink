@@ -17,7 +17,6 @@ public class SourceContextAdapter extends StreamRDFBase {
 	@Override
 	public void quad(Quad quad) {
 		Long timeStamp = Long.valueOf(quad.getGraph().getURI().replace(XSDDatatype.XSDlong.getURI()+"#", ""));
-		//System.out.println("TripleTS = \nSubject="+quad.getSubject()+"\nPredicate="+quad.getPredicate()+"\nObject="+quad.getObject()+"\nTimeStamp="+timeStamp);
 		ctx.collect(new TripleTS(quad.getSubject(), quad.getPredicate(), quad.getObject(), timeStamp));
 	}
 

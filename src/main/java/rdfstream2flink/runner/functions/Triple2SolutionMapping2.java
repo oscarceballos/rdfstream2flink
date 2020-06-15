@@ -40,32 +40,32 @@ public class Triple2SolutionMapping2 extends ProcessWindowFunction<Triple, Solut
         int i=1;
         for (Triple t : in) {
             if(subject.contains("?") && !predicate.contains("?") && !object.contains("?")) {
-                if(t.getPredicate().toString().equals(predicate) && evalObject(t.getObject())) {
+                if(t.getPredicate().getURI().toString().equals(predicate) && evalObject(t.getObject())) {
                     SolutionMapping sm = new SolutionMapping();
                     sm.putMapping(subject, t.getSubject());
                     out.collect(sm);
                 }
             } else if(!subject.contains("?") && predicate.contains("?") && !object.contains("?")) {
-                if(t.getSubject().toString().equals(subject) && evalObject(t.getObject())) {
+                if(t.getSubject().getURI().toString().equals(subject) && evalObject(t.getObject())) {
                     SolutionMapping sm = new SolutionMapping();
                     sm.putMapping(predicate, t.getPredicate());
                     out.collect(sm);
                 }
             } else if(!subject.contains("?") && !predicate.contains("?") && object.contains("?")) {
-                if(t.getSubject().toString().equals(subject) && t.getPredicate().toString().equals(predicate)) {
+                if(t.getSubject().getURI().toString().equals(subject) && t.getPredicate().getURI().toString().equals(predicate)) {
                     SolutionMapping sm = new SolutionMapping();
                     sm.putMapping(object, t.getObject());
                     out.collect(sm);
                 }
             } else if(!subject.contains("?") && predicate.contains("?") && object.contains("?")) {
-                if(t.getSubject().toString().equals(subject)) {
+                if(t.getSubject().getURI().toString().equals(subject)) {
                     SolutionMapping sm = new SolutionMapping();
                     sm.putMapping(predicate, t.getPredicate());
                     sm.putMapping(object, t.getObject());
                     out.collect(sm);
                 }
             } else if(subject.contains("?") && !predicate.contains("?") && object.contains("?")) {
-                if(t.getPredicate().toString().equals(predicate)) {
+                if(t.getPredicate().getURI().toString().equals(predicate)) {
                     SolutionMapping sm = new SolutionMapping();
                     sm.putMapping(subject, t.getSubject());
                     sm.putMapping(object, t.getObject());
