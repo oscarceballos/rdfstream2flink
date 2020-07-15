@@ -42,19 +42,19 @@ public class RDFStream2Flink {
                     Integer.parseInt(parameters.get("port")));
         else queryString = queryFile.loadSQFile();
 
-        System.out.print(queryString);
+        System.out.print(queryString+"\n\n");
 
         Query2LogicalQueryPlan query2LQP = new Query2LogicalQueryPlan(queryString);
         Op logicalQueryPlan = query2LQP.translationSQ2LQP();
 
-        System.out.println(logicalQueryPlan);
+        System.out.println(logicalQueryPlan+"\n\n");
 
-        LogicalQueryPlan2FlinkProgram lQP2FlinkProgram = new LogicalQueryPlan2FlinkProgram(logicalQueryPlan, path);
-        String flinkProgram = lQP2FlinkProgram.logicalQueryPlan2FlinkProgram();
+        //LogicalQueryPlan2FlinkProgram lQP2FlinkProgram = new LogicalQueryPlan2FlinkProgram(logicalQueryPlan, path);
+        //String flinkProgram = lQP2FlinkProgram.logicalQueryPlan2FlinkProgram();
 
-        System.out.println(flinkProgram);
+        //System.out.println(flinkProgram);
 
-        CreateFlinkProgram javaFlinkProgram = new CreateFlinkProgram(flinkProgram, path);
-        javaFlinkProgram.createFlinkProgram();
+        //CreateFlinkProgram javaFlinkProgram = new CreateFlinkProgram(flinkProgram, path);
+        //javaFlinkProgram.createFlinkProgram();
     }
 }

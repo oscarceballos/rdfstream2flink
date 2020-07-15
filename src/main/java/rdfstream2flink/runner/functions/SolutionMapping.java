@@ -1,6 +1,12 @@
 package rdfstream2flink.runner.functions;
 
+//import com.hp.hpl.jena.graph.Node;
+//import com.hp.hpl.jena.sparql.expr.Expr;
+//import com.hp.hpl.jena.sparql.sse.SSE;
 import org.apache.jena.graph.Node;
+import org.apache.jena.sparql.expr.Expr;
+import org.apache.jena.sparql.sse.SSE;
+import rdfstream2flink.runner.functions.filter.FilterConvert;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -84,10 +90,10 @@ public class SolutionMapping {
         return sm;
     }
 
-	/*public boolean filter(String expression){
+	public boolean filter(String expression){
 		Expr expr = SSE.parseExpr(expression);
 		return FilterConvert.convert(expr, this.getMapping());
-	}*/
+	}
 
     public SolutionMapping distinct(String[] vars){
         SolutionMapping sm = new SolutionMapping();

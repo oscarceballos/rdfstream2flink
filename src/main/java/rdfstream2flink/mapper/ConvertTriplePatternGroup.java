@@ -70,10 +70,10 @@ public class ConvertTriplePatternGroup {
                             "\""+evalObject(t.getObject())+"\"));\n" +
                             "\n";
                     SolutionMapping.insertSolutionMapping(indiceSM, null);
-                } else {
+                } /*else {
                     bgp += "\t\tDataStream<SolutionMapping> sm" + indiceSM + " = rdfStream"+SolutionMapping.getIndiceDS()+"\n" +
                             ConvertTriplePattern.convert(listTriplePatterns.get(indiceLTP), indiceSM);
-                }
+                }*/
                 indiceLTP += 1;
                 count += 1;
             }

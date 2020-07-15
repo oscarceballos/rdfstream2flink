@@ -8,6 +8,9 @@ import com.hp.hpl.jena.sparql.algebra.op.OpJoin;
 import com.hp.hpl.jena.sparql.algebra.op.OpProject;
 import com.hp.hpl.jena.sparql.algebra.op.OpQuadPattern;
 import com.hp.hpl.jena.sparql.core.Var;
+import com.hp.hpl.jena.sparql.algebra.op.OpFilter;
+import com.hp.hpl.jena.sparql.expr.Expr;
+import com.hp.hpl.jena.sparql.expr.ExprList;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.deri.cqels.engine.*;
 import org.deri.cqels.lang.cqels.OpStream;
@@ -46,6 +49,20 @@ public class ConvertLQP2FlinkProgram extends OpVisitorBase {
     }
 
     @Override
+    public void visit(OpFilter opFilter) {
+        ExprList exprList = opFilter.getExprs();
+        opFilter.getSubOp().visit(this);
+        for ( Expr expression : exprList ) {
+            flinkProgram += "\t\tDataStream<SolutionMapping> sm"+(SolutionMapping.getIndiceSM())+" = sm"+(SolutionMapping.getIndiceSM()-1)+"\n" +
+                    "\t\t\t.filter(new Filter(\""+FilterConvert.convert(expression)+"\"));\n\n";
+
+            ArrayList<String> variables = SolutionMapping.getSolutionMapping().get(SolutionMapping.getIndiceSM()-1);
+
+            SolutionMapping.insertSolutionMapping(SolutionMapping.getIndiceSM(), variables);
+        }
+    }
+
+    @Override
     public void visit(OpQuadPattern quadPattern) {
         visit((OpStream) quadPattern);
     }
@@ -53,7 +70,10 @@ public class ConvertLQP2FlinkProgram extends OpVisitorBase {
     public void visit(Object op, Boolean beginJoin) {
         if(beginJoin && op instanceof OpStream) {
             flinkProgram += getRDFStream(((OpStream) op).getGraphNode().toString());
-            flinkProgram += ConvertTriplePattern.convert(((OpStream) op), null, SolutionMapping.getIndiceSM(), this);
+            //flinkProgram += ConvertTriplePattern.convert(((OpStream) op), null, this);
+            ArrayList<String> variables = ConvertTriplePattern.convert(((OpStream) op), null);
+            //flinkProgram += generateOpStream(((OpStream) op), Boolean.FALSE, variables);
+            generateOpStream(((OpStream) op), Boolean.FALSE, variables);
             windows.put(SolutionMapping.getIndiceSM(), ((OpStream) op).getWindow());
         }
         else {
@@ -62,27 +82,28 @@ public class ConvertLQP2FlinkProgram extends OpVisitorBase {
     }
 
     public void visit(OpStream op) {
-        flinkProgram += generateOpStream(op, Boolean.TRUE, null);
+        //flinkProgram += generateOpStream(op, Boolean.TRUE, null);
+        generateOpStream(op, Boolean.TRUE, null);
     }
 
-    public String generateOpStream(OpStream op, Boolean createDS, ArrayList<String> variables) {
+    public void generateOpStream(OpStream op, Boolean createDS, ArrayList<String> variables) {
         if(createDS) flinkProgram += getRDFStream(op.getGraphNode().toString());
 
         Triple t = op.getBasicPattern().get(0);
 
-        String solW = "\t\tDataStream<SolutionMapping> sm" + SolutionMapping.getIndiceSM() +
+        flinkProgram += "\t\tDataStream<SolutionMapping> sm" + SolutionMapping.getIndiceSM() +
                 " = rdfStream" + SolutionMapping.getIndiceDS() + "\n" +
                 ((SolutionMapping.getTypeTime().equals("E")) ?
                         "\t\t\t.assignTimestampsAndWatermarks(new TimestampExtractor())\n":"") +
                 "\t\t\t.keyBy(new WindowKeySelector("+
-                        "\""+t.getSubject().toString()+"\", " +
-                        "\""+t.getPredicate().toString()+"\", " +
-                        "\""+evalObject(t.getObject())+"\"))\n";
+                "\""+t.getSubject().toString()+"\", " +
+                "\""+t.getPredicate().toString()+"\", " +
+                "\""+evalObject(t.getObject())+"\"))\n";
         if (op.getWindow() instanceof TripleWindow) {
             //Triple t = op.getBasicPattern().get(0);
             try {
                 Long triplesNumber = (Long) getField("t", op.getWindow());
-                solW += "\t\t\t.countWindow("+triplesNumber+")\n" +
+                flinkProgram += "\t\t\t.countWindow("+triplesNumber+")\n" +
                         "\t\t\t.process(new Triple2SolutionMapping2(" +
                         "\""+t.getSubject().toString()+"\", " +
                         "\""+t.getPredicate().toString()+"\", " +
@@ -95,7 +116,7 @@ public class ConvertLQP2FlinkProgram extends OpVisitorBase {
         else if (op.getWindow() instanceof RangeWindow) {
             //Triple t = op.getBasicPattern().get(0);
             RangeWindow w = (RangeWindow) op.getWindow();
-            solW += getRangeWindow(w) +
+            flinkProgram += getRangeWindow(w) +
                     "\t\t\t.apply(new Triple2SolutionMapping3(" +
                     "\""+t.getSubject().toString()+"\", " +
                     "\""+t.getPredicate().toString()+"\", " +
@@ -103,7 +124,7 @@ public class ConvertLQP2FlinkProgram extends OpVisitorBase {
             SolutionMapping.insertSolutionMapping(SolutionMapping.getIndiceSM(), variables);
         }
 
-        return solW;
+        //return solW;
     }
 
     public void visit(OpJoin opJoin) {
@@ -171,8 +192,7 @@ public class ConvertLQP2FlinkProgram extends OpVisitorBase {
             host = values[0];
             port = Integer.parseInt(values[1]);
         }
-        if(!flinkProgram.contains(String.format("LoadRDFStream.fromSocket(env, \"%s\", %s)",
-                host, port))) {
+        if(!flinkProgram.contains(String.format("LoadRDFStream.fromSocket(env, \"%s\", %s)", host, port))) {
             return String.format(
                     "\t\t//************ Applying Transformations To rdfStream%s ************\n" +
                             "\t\tDataStream<TripleTS> rdfStream%s = LoadRDFStream.fromSocket(env, \"%s\", %s);\n\n",
