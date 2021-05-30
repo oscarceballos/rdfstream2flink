@@ -21,8 +21,6 @@ public class ConvertTriplePattern {
     public static ArrayList<String> convert(OpStream op, Triple triple) {
         if(op != null) triple = op.getBasicPattern().get(0);
 
-        String triplePatern = "";
-
         String subject = null;
         String predicate = null;
         String object = null;

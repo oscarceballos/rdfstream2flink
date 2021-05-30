@@ -21,6 +21,7 @@ package rdfstream2flink.runner;
 import org.apache.flink.annotation.PublicEvolving;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.jena.graph.Triple;
 
 /**
  * Implements the "WordCount" program that computes a simple word occurrence histogram
@@ -59,18 +60,36 @@ public class LoadRDFStream {
      * @return A data stream containing the triples received from the socket
      */
 
+    /******** Triple ********/
     @PublicEvolving
-    public static DataStreamSource<TripleTS> fromSocket(StreamExecutionEnvironment environment, String hostname, int port, char delimiter, long maxRetry) {
-        return environment.addSource(new SocketRDFStreamFunction(hostname, port, delimiter, maxRetry), "Socket");
+    public static DataStreamSource<Triple> fromSocketTriple(StreamExecutionEnvironment environment, String hostname, int port, char delimiter, long maxRetry) {
+        return environment.addSource(new SocketStreamFunctionTriple(hostname, port, delimiter, maxRetry), "Socket");
     }
 
     @PublicEvolving
-    public static DataStreamSource<TripleTS> fromSocket(StreamExecutionEnvironment environment, String hostname, int port, char delimiter) {
-        return fromSocket(environment, hostname, port, delimiter, 0);
+    public static DataStreamSource<Triple> fromSocketTriple(StreamExecutionEnvironment environment, String hostname, int port, char delimiter) {
+        return fromSocketTriple(environment, hostname, port, delimiter, 0);
     }
 
     @PublicEvolving
-    public static DataStreamSource<TripleTS> fromSocket(StreamExecutionEnvironment environment, String hostname, int port) {
-        return fromSocket(environment, hostname, port, '\n');
+    public static DataStreamSource<Triple> fromSocketTriple(StreamExecutionEnvironment environment, String hostname, int port) {
+        return fromSocketTriple(environment, hostname, port, '\n');
+    }
+
+
+    /******** TripleTS ********/
+    @PublicEvolving
+    public static DataStreamSource<TripleTS> fromSocketTripleTS(StreamExecutionEnvironment environment, String hostname, int port, char delimiter, long maxRetry) {
+        return environment.addSource(new SocketStreamFunctionTripleTS(hostname, port, delimiter, maxRetry), "Socket");
+    }
+
+    @PublicEvolving
+    public static DataStreamSource<TripleTS> fromSocketTripleTS(StreamExecutionEnvironment environment, String hostname, int port, char delimiter) {
+        return fromSocketTripleTS(environment, hostname, port, delimiter, 0);
+    }
+
+    @PublicEvolving
+    public static DataStreamSource<TripleTS> fromSocketTripleTS(StreamExecutionEnvironment environment, String hostname, int port) {
+        return fromSocketTripleTS(environment, hostname, port, '\n');
     }
 }

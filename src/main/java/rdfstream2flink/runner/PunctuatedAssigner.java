@@ -1,12 +1,14 @@
 package rdfstream2flink.runner;
 
+import org.apache.flink.streaming.api.functions.AssignerWithPeriodicWatermarks;
 import org.apache.flink.streaming.api.functions.AssignerWithPunctuatedWatermarks;
 import org.apache.flink.streaming.api.watermark.Watermark;
 
 import javax.annotation.Nullable;
 import java.sql.Timestamp;
 
-public class TimestampExtractor implements AssignerWithPunctuatedWatermarks<TripleTS> {
+public class PunctuatedAssigner implements AssignerWithPunctuatedWatermarks<TripleTS> {
+//public class PunctuatedAssigner implements AssignerWithPeriodicWatermarks<TripleTS> {
     public static Long backTimestampEvent = null;
     public static Long backTimestampTrans = null;
 

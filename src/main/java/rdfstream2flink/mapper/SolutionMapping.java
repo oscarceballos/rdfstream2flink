@@ -8,6 +8,7 @@ public class SolutionMapping {
 
     private static HashMap<Integer, ArrayList<String>> solutionMapping = new HashMap<>();
     private static String typeTime = "E"; // For default is used Event Time
+    private static String typeWindow = "R"; // For default is used RANGE (Tumbling)
     private static int indiceSM = 1;
     private static int indiceDS = 0;
 
@@ -69,8 +70,16 @@ public class SolutionMapping {
         return typeTime;
     }
 
+    public static String getTypeWindow() {
+        return typeWindow;
+    }
+
     public static void setTypeTime(String typeTime) {
         SolutionMapping.typeTime = typeTime;
+    }
+
+    public static void setTypeWindow(String typeWindow) {
+        SolutionMapping.typeWindow = typeWindow;
     }
 
     @Override

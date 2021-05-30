@@ -24,6 +24,7 @@ public class LogicalQueryPlan2FlinkProgram {
                 "import org.apache.flink.api.common.typeinfo.TypeInformation;\n" +
                 "import org.apache.flink.api.java.utils.ParameterTool;\n" +
                 "import org.apache.flink.core.fs.FileSystem;\n" +
+                "import org.apache.flink.streaming.api.TimeCharacteristic;\n" +
                 "import org.apache.flink.streaming.api.datastream.DataStream;\n" +
                 "import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;\n" +
                 "import org.apache.flink.streaming.api.functions.timestamps.AscendingTimestampExtractor;\n" +
@@ -45,8 +46,12 @@ public class LogicalQueryPlan2FlinkProgram {
                 "\t\tif (!params.has(\"output\")) {\n" +
                 "\t\t\tSystem.out.println(\"Use --output to specify output path.\");\n" +
                 "\t\t}\n\n"+
-                "\t\t//************ Environment (DataStream) and Stream (RDF Stream) ************\n" +
-                "\t\tfinal StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();\n\n";
+                "\t\t//************ StreamExecutionEnvironment and Time Characteristic ************\n" +
+                "\t\tfinal StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();\n" +
+                ((SolutionMapping.getTypeTime().equals("E"))
+                        ? "\t\tenv.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);\n\n"
+                        : ((SolutionMapping.getTypeTime().equals("P"))
+                                ? "\t\tenv.setStreamTimeCharacteristic(TimeCharacteristic.ProcessingTime);\n\n" : "\n"));
 
         logicalQueryPlan.visit(new ConvertLQP2FlinkProgram());
 
@@ -54,10 +59,10 @@ public class LogicalQueryPlan2FlinkProgram {
 
         flinkProgram += "\t\t//************ Sink  ************\n" +
                 "\t\tsm"+(SolutionMapping.getIndiceSM()-1) +
-                ".writeAsText(params.get(\"output\")+\""+className+"-Flink-Result\", FileSystem.WriteMode.OVERWRITE)\n" +
-                "\t\t\t.setParallelism(1);\n\n"+
-                //".print();\n\n" +
-                "\t\tenv.execute(\"CQELS-QL to Flink Programan - DataStream API\");\n";
+                //".writeAsText(params.get(\"output\")+\""+className+"-Flink-Result\", FileSystem.WriteMode.OVERWRITE)\n" +
+                //"\t\t\t.setParallelism(1);\n\n"+
+                ".print().setParallelism(1);\n\n" +
+                "\t\tenv.execute(\"CQELS-QL to Flink Program - DataStream API\");\n";
 
         flinkProgram += "\t}\n}";
 

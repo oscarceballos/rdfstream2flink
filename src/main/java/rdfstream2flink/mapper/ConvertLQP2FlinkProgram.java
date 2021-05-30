@@ -93,18 +93,20 @@ public class ConvertLQP2FlinkProgram extends OpVisitorBase {
 
         flinkProgram += "\t\tDataStream<SolutionMapping> sm" + SolutionMapping.getIndiceSM() +
                 " = rdfStream" + SolutionMapping.getIndiceDS() + "\n" +
-                ((SolutionMapping.getTypeTime().equals("E")) ?
-                        "\t\t\t.assignTimestampsAndWatermarks(new TimestampExtractor())\n":"") +
-                "\t\t\t.keyBy(new WindowKeySelector("+
-                "\""+t.getSubject().toString()+"\", " +
-                "\""+t.getPredicate().toString()+"\", " +
-                "\""+evalObject(t.getObject())+"\"))\n";
+                //((SolutionMapping.getTypeTime().equals("E")) ?
+                  //      "\t\t\t.assignTimestampsAndWatermarks(new PeriodicAssigner())\n":"") +
+                ((SolutionMapping.getTypeTime().equals("E") || (SolutionMapping.getTypeTime().equals("P"))) ?
+                        "\t\t\t.keyBy(new WindowKSTripleTS())\n" : "\t\t\t.keyBy(new WindowKSTriple())\n");
+                //"\""+t.getSubject().toString()+"\", " +
+                //"\""+t.getPredicate().toString()+"\", " +
+                //"\""+evalObject(t.getObject())+"\"))\n";
         if (op.getWindow() instanceof TripleWindow) {
             //Triple t = op.getBasicPattern().get(0);
             try {
                 Long triplesNumber = (Long) getField("t", op.getWindow());
+                String t2SM = ((SolutionMapping.getTypeTime().equals("E") || (SolutionMapping.getTypeTime().equals("P"))) ? "TripleTS2SM2" : "Triple2SM2");
                 flinkProgram += "\t\t\t.countWindow("+triplesNumber+")\n" +
-                        "\t\t\t.process(new Triple2SolutionMapping2(" +
+                        "\t\t\t.process(new "+t2SM+"(" +
                         "\""+t.getSubject().toString()+"\", " +
                         "\""+t.getPredicate().toString()+"\", " +
                         "\""+evalObject(t.getObject())+"\"));\n\n";
@@ -116,8 +118,10 @@ public class ConvertLQP2FlinkProgram extends OpVisitorBase {
         else if (op.getWindow() instanceof RangeWindow) {
             //Triple t = op.getBasicPattern().get(0);
             RangeWindow w = (RangeWindow) op.getWindow();
+            String t2SM = ((SolutionMapping.getTypeTime().equals("E") || (SolutionMapping.getTypeTime().equals("P"))) ? "TripleTS2SM3" : "Triple2SM3");
             flinkProgram += getRangeWindow(w) +
-                    "\t\t\t.apply(new Triple2SolutionMapping3(" +
+                    //"\t\t\t.apply(new "+t2SM+"(" +
+                    "\t\t\t.process(new "+t2SM+"(" +
                     "\""+t.getSubject().toString()+"\", " +
                     "\""+t.getPredicate().toString()+"\", " +
                     "\""+evalObject(t.getObject())+"\"));\n\n";
@@ -145,17 +149,18 @@ public class ConvertLQP2FlinkProgram extends OpVisitorBase {
         if(listKeys.size()>0) {
             if((lW instanceof TripleWindow) || (rW instanceof TripleWindow)) {
                 String keys = JoinKeys.keys(listKeys);
-                try {
+                //try {
                     flinkProgram += "\t\tDataStream<SolutionMapping> sm" + indice_sm_join + " = sm" + indice_sm_left + ".join(sm" + indice_sm_right + ")\n" +
                             "\t\t\t.where(new JoinKeySelector(new String[]{" + keys + "}))\n" +
                             "\t\t\t.equalTo(new JoinKeySelector(new String[]{" + keys + "}))\n" +
                             "\t\t\t.window(GlobalWindows.create())\n" +
-                            "\t\t\t.trigger(CountTrigger.of("+(getField("t", (lW!=null) ? lW : rW).toString())+"))\n" +
+                            //"\t\t\t.trigger(CountTrigger.of("+(getField("t", (lW!=null) ? lW : rW).toString())+"))\n" +
+                            "\t\t\t.trigger(CountTrigger.of(1))\n" +
                             "\t\t\t.apply(new Join());" +
                             "\n\n";
-                } catch (NoSuchFieldException | IllegalAccessException e) {
-                    e.printStackTrace();
-                }
+                //} catch (NoSuchFieldException | IllegalAccessException e) {
+                //    e.printStackTrace();
+                //}
             } else if((lW instanceof RangeWindow) || (rW instanceof RangeWindow)) {
                 String keys = JoinKeys.keys(listKeys);
                 RangeWindow w = (RangeWindow) ((lW!=null) ? lW : rW);
@@ -192,11 +197,24 @@ public class ConvertLQP2FlinkProgram extends OpVisitorBase {
             host = values[0];
             port = Integer.parseInt(values[1]);
         }
-        if(!flinkProgram.contains(String.format("LoadRDFStream.fromSocket(env, \"%s\", %s)", host, port))) {
-            return String.format(
-                    "\t\t//************ Applying Transformations To rdfStream%s ************\n" +
-                            "\t\tDataStream<TripleTS> rdfStream%s = LoadRDFStream.fromSocket(env, \"%s\", %s);\n\n",
-                    SolutionMapping.incrementIDS(), SolutionMapping.getIndiceDS(), host, port);
+        if(SolutionMapping.getTypeTime().equals("E") || SolutionMapping.getTypeTime().equals("P")){
+            if(!flinkProgram.contains(String.format(".fromSocketTripleTS(env, \"%s\", %s)", host, port))) {
+                String printTransformation = (SolutionMapping.getIndiceDS()>=1) ? "\t\tsm"+(SolutionMapping.getIndiceSM()-1)+".print();\n\n" : "";
+                String loadStream = "\t\tDataStream<TripleTS> rdfStream%s = LoadRDFStream\n" +
+                        "\t\t\t.fromSocketTripleTS(env, \"%s\", %s)\n" +
+                        "\t\t\t.assignTimestampsAndWatermarks(new PeriodicAssigner());\n\n" +
+                        "\t\t//************ Applying Transformations To rdfStream"+(SolutionMapping.getIndiceDS()+1)+" ************\n";
+                return String.format("\t\t//************ Loading RDF stream from "+host+":"+port+" ************\n" +
+                        loadStream, SolutionMapping.incrementIDS(), host, port, SolutionMapping.getIndiceDS());
+            }
+        } else {
+            if(!flinkProgram.contains(String.format(".fromSocketTriple(env, \"%s\", %s)", host, port))) {
+                String printTransformation = (SolutionMapping.getIndiceDS()>=1) ? "\t\tsm"+(SolutionMapping.getIndiceSM()-1)+".print();\n\n" : "";
+                String loadStream = "\t\tDataStream<Triple> rdfStream%s = LoadRDFStream.fromSocketTriple(env, \"%s\", %s);\n\n" +
+                        "\t\t//************ Applying Transformations To rdfStream"+(SolutionMapping.getIndiceDS()+1)+" ************\n";
+                return String.format("\t\t//************ Loading RDF stream from "+host+":"+port+" ************\n" +
+                        loadStream, SolutionMapping.incrementIDS(), host, port, SolutionMapping.getIndiceDS());
+            }
         }
         return "";
     }

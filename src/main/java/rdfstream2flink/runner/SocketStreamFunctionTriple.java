@@ -1,6 +1,7 @@
 package rdfstream2flink.runner;
 
 import org.apache.flink.util.IOUtils;
+import org.apache.jena.graph.Triple;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 
@@ -18,11 +19,11 @@ import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 import org.apache.flink.streaming.api.functions.source.SourceFunction;
 
-public class SocketRDFStreamFunction implements SourceFunction<TripleTS>, Serializable {
+public class SocketStreamFunctionTriple implements SourceFunction<Triple>, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger LOG = LoggerFactory.getLogger(SocketRDFStreamFunction.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SocketStreamFunctionTriple.class);
 
 	/** Default delay between successive connection attempts */
 	private static final int DEFAULT_CONNECTION_RETRY_SLEEP = 500;
@@ -40,12 +41,12 @@ public class SocketRDFStreamFunction implements SourceFunction<TripleTS>, Serial
 
 	private volatile boolean isRunning = true;
 
-	public SocketRDFStreamFunction(String hostname, int port, char delimiter, long maxNumRetries) {
+	public SocketStreamFunctionTriple(String hostname, int port, char delimiter, long maxNumRetries) {
 		this(hostname, port, delimiter, maxNumRetries, DEFAULT_CONNECTION_RETRY_SLEEP);
 	}
 
 
-	public SocketRDFStreamFunction(String hostname, int port, char delimiter, long maxNumRetries, long delayBetweenRetries) {
+	public SocketStreamFunctionTriple(String hostname, int port, char delimiter, long maxNumRetries, long delayBetweenRetries) {
 		checkArgument(port > 0 && port < 65536, "port is out of range");
 		checkArgument(maxNumRetries >= -1, "maxNumRetries must be zero or larger (num retries), or -1 (infinite retries)");
 		checkArgument(delayBetweenRetries >= 0, "delayBetweenRetries must be zero or positive");
@@ -58,12 +59,12 @@ public class SocketRDFStreamFunction implements SourceFunction<TripleTS>, Serial
 	}
 
 	@Override
-	public void run(SourceContext<TripleTS> ctx) {
+	public void run(SourceContext<Triple> ctx) {
 		//while(isRunning){
 		try(Socket socket = new Socket()){
 			currentSocket = socket;
 			currentSocket.connect(new InetSocketAddress(hostname, port), CONNECTION_TIMEOUT_TIME);
-			RDFDataMgr.parse(new SourceContextAdapter(ctx), socket.getInputStream(), Lang.NQ);
+			RDFDataMgr.parse(new SourceContextAdapterTriple(ctx), socket.getInputStream(), Lang.NQ);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

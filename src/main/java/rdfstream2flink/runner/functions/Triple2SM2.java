@@ -1,17 +1,22 @@
 package rdfstream2flink.runner.functions;
 
-//import com.hp.hpl.jena.graph.Node;
+import org.apache.flink.api.common.functions.FlatMapFunction;
+import org.apache.flink.streaming.api.functions.windowing.ProcessWindowFunction;
 import org.apache.flink.streaming.api.functions.windowing.WindowFunction;
+import org.apache.flink.streaming.api.windowing.windows.GlobalWindow;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
+import org.apache.flink.streaming.api.windowing.windows.Window;
 import org.apache.flink.util.Collector;
 import org.apache.jena.graph.Node;
+import org.apache.jena.graph.Triple;
 import rdfstream2flink.runner.TripleTS;
 
-public class Triple2SolutionMapping3 implements WindowFunction<TripleTS, SolutionMapping, String, TimeWindow> {
+//Triple to SolutionMapping - Map Function
+public class Triple2SM2 extends ProcessWindowFunction<Triple, SolutionMapping, String, GlobalWindow> {
 
-    private String subject, predicate, object;
+    private String subject, predicate, object = null;
 
-    public Triple2SolutionMapping3(String s, String p, String o){
+    public Triple2SM2(String s, String p, String o){
         this.subject = s;
         this.predicate = p;
         this.object = o;
@@ -31,9 +36,10 @@ public class Triple2SolutionMapping3 implements WindowFunction<TripleTS, Solutio
         return flag;
     }
 
-    public void apply(String key, TimeWindow w, Iterable<TripleTS> in, Collector<SolutionMapping> out) {
+    @Override
+    public void process(String key, Context context, Iterable<Triple> in, Collector<SolutionMapping> out) throws Exception{
         int i=0;
-        for (TripleTS t : in) {
+        for (Triple t : in) {
             if(subject.contains("?") && !predicate.contains("?") && !object.contains("?")) {
                 if(t.getPredicate().getURI().toString().equals(predicate) && evalObject(t.getObject())) {
                     SolutionMapping sm = new SolutionMapping();
@@ -52,11 +58,11 @@ public class Triple2SolutionMapping3 implements WindowFunction<TripleTS, Solutio
                     sm.putMapping(object, t.getObject());
                     out.collect(sm);
                 }
-            } else if(!subject.contains("?") && predicate.contains("?") && object.contains("?")) {
-                if(t.getSubject().getURI().toString().equals(subject)) {
+            } else if(subject.contains("?") && predicate.contains("?") && !object.contains("?")) {
+                if(evalObject(t.getObject())) {
                     SolutionMapping sm = new SolutionMapping();
+                    sm.putMapping(subject, t.getSubject());
                     sm.putMapping(predicate, t.getPredicate());
-                    sm.putMapping(object, t.getObject());
                     out.collect(sm);
                 }
             } else if(subject.contains("?") && !predicate.contains("?") && object.contains("?")) {
@@ -66,11 +72,11 @@ public class Triple2SolutionMapping3 implements WindowFunction<TripleTS, Solutio
                     sm.putMapping(object, t.getObject());
                     out.collect(sm);
                 }
-            } else if(subject.contains("?") && predicate.contains("?") && !object.contains("?")) {
-                if(evalObject(t.getObject())) {
+            } else if(!subject.contains("?") && predicate.contains("?") && object.contains("?")) {
+                if(t.getSubject().getURI().toString().equals(subject)) {
                     SolutionMapping sm = new SolutionMapping();
-                    sm.putMapping(subject, t.getSubject());
                     sm.putMapping(predicate, t.getPredicate());
+                    sm.putMapping(object, t.getObject());
                     out.collect(sm);
                 }
             } else {
@@ -80,6 +86,8 @@ public class Triple2SolutionMapping3 implements WindowFunction<TripleTS, Solutio
                 sm.putMapping(object, t.getObject());
                 out.collect(sm);
             }
+            i++;
         }
+        //System.out.println("Window-hashCode(): "+context.window().hashCode()+" \t---\t"+" -- Total: "+i);
     }
 }

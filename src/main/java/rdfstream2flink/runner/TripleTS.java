@@ -11,12 +11,14 @@ public class TripleTS extends Triple {
 
     public TripleTS(Node s, Node p, Node o, Long timeStamp) {
         super(s, p, o);
-        this.timeStamp = (timeStamp==null) ? (new Timestamp(System.currentTimeMillis())).getTime() : timeStamp;
+        //this.timeStamp = (timeStamp==null) ? (new Timestamp(System.currentTimeMillis())).getTime() : timeStamp;
+        this.timeStamp = timeStamp;
     }
 
     public TripleTS(Triple t, Long timeStamp) {
         super(t.getSubject(), t.getPredicate(), t.getObject());
-        this.timeStamp = (timeStamp==null) ? (new Timestamp(System.currentTimeMillis())).getTime() : timeStamp;
+        //this.timeStamp = (timeStamp==null) ? (new Timestamp(System.currentTimeMillis())).getTime() : timeStamp;
+        this.timeStamp = timeStamp;
     }
 
     public TripleTS(Node s, Node p, Node o) {
@@ -39,7 +41,6 @@ public class TripleTS extends Triple {
 
     @Override
     public String toString() {
-        return "TripleTS{" + super.toString() +
-                ", timeStamp=" + timeStamp + '}';
+        return "TripleTS{" + super.toString() + ", timeStamp=" + timeStamp + '}';
     }
 }

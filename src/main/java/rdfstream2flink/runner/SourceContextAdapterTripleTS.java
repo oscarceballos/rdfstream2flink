@@ -6,17 +6,18 @@ import org.apache.jena.graph.Triple;
 import org.apache.jena.riot.system.StreamRDFBase;
 import org.apache.jena.sparql.core.Quad;
 
-public class SourceContextAdapter extends StreamRDFBase {
+public class SourceContextAdapterTripleTS extends StreamRDFBase {
 
 	private SourceContext<TripleTS> ctx;
 
-	public SourceContextAdapter(SourceContext<TripleTS> ctx){
+	public SourceContextAdapterTripleTS(SourceContext<TripleTS> ctx){
 		this.ctx = ctx;
 	}
 
 	@Override
 	public void quad(Quad quad) {
 		Long timeStamp = Long.valueOf(quad.getGraph().getURI().replace(XSDDatatype.XSDlong.getURI()+"#", ""));
+        //System.out.println("=========> timeStamp="+timeStamp);
 		ctx.collect(new TripleTS(quad.getSubject(), quad.getPredicate(), quad.getObject(), timeStamp));
 	}
 
