@@ -84,6 +84,8 @@ public class Query {
 ## Runner module
 This module allows executing a Flink program (as a jar file) on an Apache Flink stand-alone or local cluster mode. This module is composed of three submodules: i) Load Flink Program that loads a Flink program with .jar extension; ii) Load RDF stream that loads an RDF stream in N-Triples format serialization; and ii) Functions that contains several Java classes that allows to solve the transformations within the Flink program.
 
+
+## Process to launch RDFStream2Flink library
 Initially to launch the main class of this repository you will install the Maven installation manager (```mvn```) and run the file ```libs.sh```, to install the local libraries necessary to run the class ```RDFStream2Flink```.
 
 ## Generate jars for
