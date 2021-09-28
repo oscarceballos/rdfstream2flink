@@ -1,4 +1,4 @@
-# RDFStream2flink library
+## RDFStream2Flink library
 
 An approach for transforming a given CQELS-QL query into an Apache Flink program for querying massive RDF stream data. The RDFStream2Flink library is composed of two modules, called: Mapper and Runner, as shown in Figure 1.
 
