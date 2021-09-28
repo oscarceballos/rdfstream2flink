@@ -17,7 +17,6 @@ public class RDFStream2Flink {
 
         HashMap<String, String> parameters = new HashMap<>();
         Logger logger = LoggerFactory.getLogger(RDFStream2Flink.class);
-        System.out.println("|"+args[0]+"|");
 
         for (String s : args) {
             parameters.put(s.split("=")[0].trim(), s.split("=")[1].trim());
@@ -44,8 +43,6 @@ public class RDFStream2Flink {
 
         Query2LogicalQueryPlan query2LQP = new Query2LogicalQueryPlan(queryString);
         Op logicalQueryPlan = query2LQP.translationSQ2LQP();
-
-        System.out.println(logicalQueryPlan);
 
         LogicalQueryPlan2FlinkProgram lQP2FlinkProgram = new LogicalQueryPlan2FlinkProgram(logicalQueryPlan, path);
         String flinkProgram = lQP2FlinkProgram.logicalQueryPlan2FlinkProgram();
