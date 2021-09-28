@@ -88,7 +88,7 @@ This module allows executing a Flink program (as a jar file) on an Apache Flink 
 ## Process to launch RDFStream2Flink library
 Initially to launch the main class of this repository you will install the Maven installation manager (```mvn```) and run the file ```libs.sh```, to install the local libraries necessary to run the class ```RDFStream2Flink```.
 
-## Generate jars for
+### Generate jars for
 * With libraries
 ```
 mvn clean compile assembly:single
@@ -98,7 +98,7 @@ mvn clean compile assembly:single
 mvn package
 ```
 
-## Parameters
+### Parameters
 * path: path to query [path/query.txt]
 * host: if you pass this parameter, the urls established in streams within the query are changed to the use of that value.
 * port: It is mandatory in case of using the previous parameter
