@@ -2,6 +2,8 @@
 
 An approach for transforming a given CQELS-QL query into an Apache Flink program for querying massive RDF stream data. The RDFStream2Flink library is composed of two modules, called: Mapper and Runner, as shown in Figure 1.
 
+![Image text](/examples/rdfstream2flink.png)
+
 The RDFStream2Flink library, through a Mapper module, receives a CQELS-QL query and transforms it into a Logical Query Plan based on CQELS-QL Algebra. This Logical Query Plan is translated to a Flink program based on DataStream API transformations. The library generates a Java program compiled by the Maven command into a command-line terminal generating a .jar file. Then, the Flink program is executed by the Runner module. It is necessary to pass the RDF streams data in an N-Triple format serialization, i.e., each stream element is to be in the form (<s, p, o>, t) where <s, p, o> is a triple and t is a timestamp. Finally, after the process of the Flink program, the library returns a result. The Mapper and Runner modules and their submodules will explain in more detail in the following section.
 
 ## Mapper module
